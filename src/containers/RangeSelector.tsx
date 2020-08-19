@@ -1,8 +1,10 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { connect } from "react-redux";
 import {
   setComboActive,
   setComboInactive,
+  setSuitActive,
+  setSuitInactive,
   clearRange,
 } from "../redux/range/actions";
 import styled from "styled-components";
@@ -52,20 +54,24 @@ const RangeSelectorStyle = styled.div`
 // 13x13 array of objects
 
 type Props = {
-  comboNames: string[];
+  comboElements: string[];
   comboStates: ComboState[];
-  suitCombos: Array<{ name?: string; state: ComboState }>[];
+  suitCombos: Array<{ element: ReactElement; state: ComboState }>[];
   activeComboIndex: number;
   clearRange: () => void;
+  setSuitActive: (index: number) => void;
+  setSuitInactive: (index: number) => void;
   setComboActive: (index: number) => void;
   setComboInactive: (index: number) => void;
 };
 const RangeSelector: React.FC<Props> = ({
-  comboNames,
+  comboElements,
   comboStates,
   suitCombos,
   setComboActive,
   setComboInactive,
+  setSuitActive,
+  setSuitInactive,
   activeComboIndex,
   clearRange,
 }) => {
@@ -96,7 +102,7 @@ const RangeSelector: React.FC<Props> = ({
       <CardMatrix
         selectElement={setComboActive}
         deselectElement={setComboInactive}
-        elements={comboNames}
+        elements={comboElements}
         states={comboStates}
       />
       <div className="range-selector-bottom-bar">
@@ -121,7 +127,11 @@ const RangeSelector: React.FC<Props> = ({
             value={""}
           />
         </div>
-        <SuitMatrix combo={suitCombos[activeComboIndex]} />
+        <SuitMatrix
+          selectElement={setSuitActive}
+          deselectElement={setSuitInactive}
+          combo={suitCombos[activeComboIndex]}
+        />
       </div>
     </RangeSelectorStyle>
   );
@@ -129,13 +139,19 @@ const RangeSelector: React.FC<Props> = ({
 
 const mapStateToProps = (state: any) => {
   return {
-    comboNames: state.range.comboNames,
+    comboElements: state.range.comboElements,
     comboStates: state.range.comboStates,
     suitCombos: state.range.suitCombos,
     activeComboIndex: state.range.activeComboIndex,
   };
 };
 
-const mapDispatchToProps = { setComboActive, setComboInactive, clearRange };
+const mapDispatchToProps = {
+  setComboActive,
+  setComboInactive,
+  setSuitActive,
+  setSuitInactive,
+  clearRange,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(RangeSelector);
