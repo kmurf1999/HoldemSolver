@@ -1,34 +1,33 @@
-import React, { ReactElement, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { ComboState } from "../redux/range/types";
 import { colors } from "../styles";
+import { UIState } from "../lib";
 
 interface MatrixTileProps {
-  state: ComboState;
+  state: UIState;
   index: number;
 }
 
-const MatrixTileStyle = styled.div<{ state: ComboState; id: string }>`
+const MatrixTileStyle = styled.div<{ state: UIState; id: string }>`
   background: ${(props) => {
     switch (props.state) {
-      case ComboState.INACTIVE:
+      case UIState.INACTIVE:
         return "#fff";
-      case ComboState.ACTIVE:
-      case ComboState.PARTIAL:
+      case UIState.ACTIVE:
         return colors.primary;
-      case ComboState.UNAVAILABLE:
+      case UIState.UNAVAILABLE:
         return "rgba(0,0,0,0.05)";
     }
   }};
 
   color: ${(props) => {
     switch (props.state) {
-      case ComboState.ACTIVE:
-      case ComboState.PARTIAL:
+      case UIState.ACTIVE:
         return "#fff";
-      case ComboState.INACTIVE:
-      case ComboState.UNAVAILABLE:
+      case UIState.INACTIVE:
         return "rgba(0,0,0,0.45)";
+      case UIState.UNAVAILABLE:
+        return "rgba(0,0,0,0.0)";
     }
   }};
 
@@ -53,8 +52,8 @@ interface MatrixProps {
   rows: number;
   width: string;
   height: string;
-  elements: ReactElement[];
-  states: ComboState[];
+  elements: string[];
+  states: UIState[];
   selectElement?: (index: number) => void;
   deselectElement?: (index: number) => void;
 }
@@ -134,7 +133,7 @@ const Matrix: React.FC<MatrixProps> = ({
       width={width}
       height={height}
     >
-      {elements.map((element: ReactElement, index: number) => (
+      {elements.map((element: any, index: number) => (
         <MatrixTile key={index} index={index} state={states[index]}>
           {element}
         </MatrixTile>

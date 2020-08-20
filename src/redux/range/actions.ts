@@ -3,27 +3,13 @@ import {
   CLEAR_RANGE,
   SET_COMBO_ACTIVE,
   SET_COMBO_INACTIVE,
-  SET_SUIT_ACTIVE,
-  SET_SUIT_INACTIVE,
+  SET_SUIT_COMBO_ACTIVE,
+  SET_SUIT_COMBO_INACTIVE,
 } from "./types";
 
 export function clearRange(): RangeActionTypes {
   return {
     type: CLEAR_RANGE,
-  };
-}
-
-export function setSuitActive(suitIndex: number): RangeActionTypes {
-  return {
-    type: SET_SUIT_ACTIVE,
-    payload: { suitIndex },
-  };
-}
-
-export function setSuitInactive(suitIndex: number): RangeActionTypes {
-  return {
-    type: SET_SUIT_INACTIVE,
-    payload: { suitIndex },
   };
 }
 
@@ -41,6 +27,24 @@ export function setComboInactive(comboIndex: number): RangeActionTypes {
     type: SET_COMBO_INACTIVE,
     payload: {
       comboIndex,
+    },
+  };
+}
+
+export function setSuitComboActive(suitIndex: number): RangeActionTypes {
+  return {
+    type: SET_SUIT_COMBO_ACTIVE,
+    payload: {
+      suitIndex,
+    },
+  };
+}
+
+export function setSuitComboInactive(suitIndex: number): RangeActionTypes {
+  return {
+    type: SET_SUIT_COMBO_INACTIVE,
+    payload: {
+      suitIndex,
     },
   };
 }
