@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, ReactNode } from "react";
 import styled from "styled-components";
 import { colors } from "../styles";
 import { UIState } from "../lib";
@@ -14,6 +14,7 @@ const MatrixTileStyle = styled.div<{ state: UIState; id: string }>`
       case UIState.INACTIVE:
         return "#fff";
       case UIState.ACTIVE:
+      case UIState.PARTIAL:
         return colors.primary;
       case UIState.UNAVAILABLE:
         return "rgba(0,0,0,0.05)";
@@ -22,21 +23,46 @@ const MatrixTileStyle = styled.div<{ state: UIState; id: string }>`
 
   color: ${(props) => {
     switch (props.state) {
+      case UIState.PARTIAL:
       case UIState.ACTIVE:
         return "#fff";
       case UIState.INACTIVE:
         return "rgba(0,0,0,0.45)";
       case UIState.UNAVAILABLE:
-        return "rgba(0,0,0,0.0)";
+        return "transparent";
     }
   }};
 
+  ${(props) => {
+    if (props.state === UIState.PARTIAL) {
+      return `
+      &::after {
+        content: "";
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: ${colors.info};
+        border-radius: 50%;
+        left: 6px;
+        bottom: 6px;
+      }
+      `;
+    }
+  }}
+
+  * {
+    pointer-events: none;
+    display: ${(props) =>
+      props.state === UIState.UNAVAILABLE ? "none" : "inline"};
+  }
+  position: relative;
   border-radius: 8px;
   font-family: "SF UI Text Regular";
   font-size: 16px;
 
   padding: 4px;
-  cursor: pointer;
+  cursor: ${(props) =>
+    props.state === UIState.UNAVAILABLE ? "normal" : "pointer"};
 `;
 
 const MatrixTile: React.FC<MatrixTileProps> = ({ index, state, children }) => {
@@ -52,7 +78,7 @@ interface MatrixProps {
   rows: number;
   width: string;
   height: string;
-  elements: string[];
+  elements: ReactNode[];
   states: UIState[];
   selectElement?: (index: number) => void;
   deselectElement?: (index: number) => void;

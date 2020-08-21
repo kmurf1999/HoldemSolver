@@ -15,4 +15,5 @@ export const GlobalStyle = createGlobalStyle`
 export const colors = {
   primary: "#667ACD",
   warning: "#E89B80",
+  info: "#B8EBD0",
 };

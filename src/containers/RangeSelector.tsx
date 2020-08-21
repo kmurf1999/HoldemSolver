@@ -7,17 +7,22 @@ import { UIState } from "../lib";
 import {
   ComboType,
   getComboName,
-  getSuitComboName,
+  getSuitComboElement,
   getSuitComboState,
+  getComboCount,
+  rangeToString,
   OFFSUITED_MASK,
   SUITED_MASK,
   PAIR_MASK,
 } from "../HandRange";
 import {
+  setRangeAll,
   setComboActive,
   setComboInactive,
   setSuitComboActive,
   setSuitComboInactive,
+  setRangeBroadway,
+  setRangePairs,
   clearRange,
 } from "../redux/range/actions";
 
@@ -40,6 +45,10 @@ const RangeSelectorStyle = styled.div`
         margin-left: 8px;
       }
     }
+  }
+
+  .range-selector-text-area {
+    height: 108px;
   }
 
   .range-selector-bottom-bar {
@@ -69,6 +78,9 @@ type Props = {
   setSuitComboActive: (index: number) => void;
   setSuitComboInactive: (index: number) => void;
   clearRange: () => void;
+  setRangeAll: () => void;
+  setRangeBroadway: () => void;
+  setRangePairs: () => void;
 };
 const RangeSelector: React.FC<Props> = ({
   rangeCombos,
@@ -77,27 +89,43 @@ const RangeSelector: React.FC<Props> = ({
   setComboInactive,
   setSuitComboActive,
   setSuitComboInactive,
+  setRangePairs,
+  setRangeBroadway,
+  setRangeAll,
   clearRange,
   activeComboIndex,
 }) => {
+  const rangeStr = rangeToString(rangeCombos, rangeTypes);
   const comboNames: string[] = rangeCombos.map((_, index) =>
     getComboName(index)
   );
   const comboStates: UIState[] = rangeCombos.map((combo, index) => {
     switch (rangeTypes[index]) {
       case ComboType.OFFSUITED:
-        return combo === OFFSUITED_MASK ? UIState.ACTIVE : UIState.INACTIVE;
+        return combo === OFFSUITED_MASK
+          ? UIState.ACTIVE
+          : combo === 0
+          ? UIState.INACTIVE
+          : UIState.PARTIAL;
       case ComboType.SUITED:
-        return combo === SUITED_MASK ? UIState.ACTIVE : UIState.INACTIVE;
+        return combo === SUITED_MASK
+          ? UIState.ACTIVE
+          : combo === 0
+          ? UIState.INACTIVE
+          : UIState.PARTIAL;
       case ComboType.PAIR:
-        return combo === PAIR_MASK ? UIState.ACTIVE : UIState.INACTIVE;
+        return combo === PAIR_MASK
+          ? UIState.ACTIVE
+          : combo === 0
+          ? UIState.INACTIVE
+          : UIState.PARTIAL;
       default:
         return UIState.INACTIVE;
     }
   });
   const suitCombos = new Array(16)
     .fill(0)
-    .map((_, i) => getSuitComboName(activeComboIndex, i));
+    .map((_, i) => getSuitComboElement(activeComboIndex, i));
   const suitStates = new Array(16)
     .fill(0)
     .map((_, i) =>
@@ -107,6 +135,8 @@ const RangeSelector: React.FC<Props> = ({
         i
       )
     );
+
+  console.log(getComboCount(rangeCombos) / 1326);
   return (
     <RangeSelectorStyle>
       <div className="range-selector-top-bar">
@@ -145,10 +175,13 @@ const RangeSelector: React.FC<Props> = ({
         <div className="range-selector-controls">
           <Slider leftValue={0} rightValue={0.5} />
           <div className="range-selector-controls-buttons">
-            <Button variant="default" onClick={() => {}}>
+            <Button variant="default" onClick={setRangeAll}>
               All
             </Button>
-            <Button variant="default" onClick={() => {}}>
+            <Button variant="default" onClick={setRangePairs}>
+              Pairs
+            </Button>
+            <Button variant="default" onClick={setRangeBroadway}>
               Broadway
             </Button>
             <Button variant="warning" onClick={clearRange}>
@@ -158,9 +191,10 @@ const RangeSelector: React.FC<Props> = ({
           <TextArea
             rows={4}
             cols={4}
+            className="range-selector-text-area"
             placeholder={""}
             onChange={() => {}}
-            value={""}
+            value={rangeStr}
           />
         </div>
         <Matrix
@@ -173,11 +207,6 @@ const RangeSelector: React.FC<Props> = ({
           rows={4}
           cols={4}
         />
-        {/* <SuitMatrix
-        //   selectElement={setSuitActive}
-        //   deselectElement={setSuitInactive}
-        //   combo={suitCombos[activeComboIndex]}
-        // /> */}
       </div>
     </RangeSelectorStyle>
   );
@@ -197,6 +226,9 @@ const mapDispatchToProps = {
   clearRange,
   setSuitComboActive,
   setSuitComboInactive,
+  setRangeBroadway,
+  setRangePairs,
+  setRangeAll,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RangeSelector);

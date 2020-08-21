@@ -5,11 +5,32 @@ import {
   SET_COMBO_INACTIVE,
   SET_SUIT_COMBO_ACTIVE,
   SET_SUIT_COMBO_INACTIVE,
+  SET_RANGE_ALL,
+  SET_RANGE_BROADWAY,
+  SET_RANGE_PAIRS,
 } from "./types";
+
+export function setRangePairs(): RangeActionTypes {
+  return {
+    type: SET_RANGE_PAIRS,
+  };
+}
+
+export function setRangeBroadway(): RangeActionTypes {
+  return {
+    type: SET_RANGE_BROADWAY,
+  };
+}
 
 export function clearRange(): RangeActionTypes {
   return {
     type: CLEAR_RANGE,
+  };
+}
+
+export function setRangeAll(): RangeActionTypes {
+  return {
+    type: SET_RANGE_ALL,
   };
 }
 
