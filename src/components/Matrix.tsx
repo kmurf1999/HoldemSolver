@@ -80,6 +80,7 @@ interface MatrixProps {
   height: string;
   elements: ReactNode[];
   states: UIState[];
+  className?: string;
   selectElement?: (index: number) => void;
   deselectElement?: (index: number) => void;
 }
@@ -114,6 +115,7 @@ const Matrix: React.FC<MatrixProps> = ({
   height,
   selectElement,
   deselectElement,
+  className = "",
 }) => {
   // used to to show updates
   const [changed, setChanged] = useState(false);
@@ -151,6 +153,7 @@ const Matrix: React.FC<MatrixProps> = ({
   }
   return (
     <MatrixStyle
+      className={className}
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
       onMouseOver={onMouseOver}

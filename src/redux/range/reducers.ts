@@ -8,9 +8,11 @@ import {
   SET_RANGE_ALL,
   SET_RANGE_BROADWAY,
   SET_RANGE_PAIRS,
+  SET_RANGE_TEXT,
   CLEAR_RANGE,
 } from "./types";
 import {
+  stringToRange,
   createEmptyRange,
   ComboType,
   OFFSUITED_MASK,
@@ -28,6 +30,12 @@ const defaultState: RangeState = { ...createEmptyRange(), activeComboIndex: 0 };
 
 const rangeReducer = (state = defaultState, action: RangeActionTypes) => {
   switch (action.type) {
+    case SET_RANGE_TEXT: {
+      return {
+        ...state,
+        combos: stringToRange(action.payload.rangeString),
+      };
+    }
     case SET_RANGE_ALL: {
       let combos = [...state.combos];
       for (let i = 0; i < 169; i++) {

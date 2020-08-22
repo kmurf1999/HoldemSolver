@@ -7,6 +7,12 @@ import { Provider } from "react-redux";
 import rootReducer from "./redux";
 import App from "./App";
 import { GlobalStyle } from "./styles";
+
+import { stringToRange } from "./HandRange";
+
+const str = "A2o";
+
+stringToRange(str);
 // import * as serviceWorker from "./serviceWorker";
 
 const store = createStore(rootReducer, composeWithDevTools());

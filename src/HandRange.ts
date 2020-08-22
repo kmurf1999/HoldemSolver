@@ -25,6 +25,23 @@ export const PAIR_MASK = 0b0000100011001110;
 export const SUITED_MASK = 0b1000010000100001;
 export const OFFSUITED_MASK = 0b0111101111011110;
 
+function charToRank(c: string): number {
+  switch (c) {
+    case "A":
+      return 12;
+    case "K":
+      return 11;
+    case "Q":
+      return 10;
+    case "J":
+      return 9;
+    case "T":
+      return 8;
+    default:
+      return Number(c) - 2;
+  }
+}
+
 export enum ComboType {
   OFFSUITED,
   SUITED,
@@ -38,6 +55,66 @@ type HandRange = {
   types: ComboType[];
   combos: number[];
 };
+
+function addCombo(
+  combos: number[],
+  rank1: number,
+  rank2: number,
+  type: string,
+  plus: boolean
+) {
+  switch (type) {
+    case "o": {
+      const index = (12 - rank2) * 13 + (12 - rank1);
+      combos[index] = OFFSUITED_MASK;
+      break;
+    }
+    case "s": {
+      const index = (12 - rank1) * 13 + (12 - rank2);
+      combos[index] = SUITED_MASK;
+      break;
+    }
+    default:
+      if (rank1 === rank2) {
+        const index = (12 - rank1) * 13 + (12 - rank2);
+        combos[index] = PAIR_MASK;
+      } else {
+        const offsuitIndex = (12 - rank2) * 13 + (12 - rank1);
+        const suitedIndex = (12 - rank1) * 13 + (12 - rank2);
+        combos[offsuitIndex] = OFFSUITED_MASK;
+        combos[suitedIndex] = SUITED_MASK;
+      }
+      break;
+  }
+  if (plus && rank1 === rank2 && rank1 < 12) {
+    addCombo(combos, rank1 + 1, rank1 + 1, type, plus);
+  }
+  if (plus && rank2 < rank1 - 1) {
+    addCombo(combos, rank1, rank2 + 1, type, plus);
+  }
+}
+
+export function stringToRange(rangeStr: string): number[] {
+  const reg = /(([2-9TJQAK]{2})(S|O)?(\+)?)|(([2-9TJQKA])([SHCD])([2-9TJQKA])([SHCD]))/;
+  let combos = new Array(169).fill(0);
+  const elements = rangeStr.toUpperCase().split(",");
+  elements.forEach((element) => {
+    const components = reg.exec(element);
+    if (!components) return;
+    if (components[1]) {
+      // not suit specific
+      const type = components[3] ? components[3].toLowerCase() : "both";
+      const rank1 = charToRank(components[2][0]);
+      const rank2 = charToRank(components[2][1]);
+      const plus = components[4] ? true : false;
+      addCombo(combos, rank1, rank2, type, plus);
+    }
+    if (components[5]) {
+      // suit specific
+    }
+  });
+  return combos;
+}
 
 export function createEmptyRange(): HandRange {
   let types = [];
@@ -271,17 +348,17 @@ export function getSuitComboElement(
     return React.createElement(
       "div",
       null,
-      RANK_TO_CHAR[firstRank],
-      React.createElement(
-        "span",
-        { fontSize: 18, style: { color: getSuitColor(firstSuit) } },
-        SUIT_TO_CHAR[firstSuit]
-      ),
       RANK_TO_CHAR[secondRank],
       React.createElement(
         "span",
         { fontSize: 18, style: { color: getSuitColor(secondSuit) } },
         SUIT_TO_CHAR[secondSuit]
+      ),
+      RANK_TO_CHAR[firstRank],
+      React.createElement(
+        "span",
+        { fontSize: 18, style: { color: getSuitColor(firstSuit) } },
+        SUIT_TO_CHAR[firstSuit]
       )
     );
 

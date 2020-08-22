@@ -8,7 +8,17 @@ import {
   SET_RANGE_ALL,
   SET_RANGE_BROADWAY,
   SET_RANGE_PAIRS,
+  SET_RANGE_TEXT,
 } from "./types";
+
+export function setRangeText(rangeString: string): RangeActionTypes {
+  return {
+    type: SET_RANGE_TEXT,
+    payload: {
+      rangeString,
+    },
+  };
+}
 
 export function setRangePairs(): RangeActionTypes {
   return {

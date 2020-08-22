@@ -6,6 +6,7 @@ export const SET_SUIT_COMBO_INACTIVE = "SET_SUIT_COMBO_INACTIVE";
 export const SET_RANGE_ALL = "SET_RANGE_ALL";
 export const SET_RANGE_BROADWAY = "SET_RANGE_BROADWAY";
 export const SET_RANGE_PAIRS = "SET_RANGE_PAIRS";
+export const SET_RANGE_TEXT = "SET_RANGE_TEXT";
 
 export enum ComboType {
   PAIR = 0,
@@ -18,6 +19,13 @@ export enum ComboState {
   ACTIVE,
   PARTIAL,
   UNAVAILABLE,
+}
+
+interface setRangeTextAction {
+  type: typeof SET_RANGE_TEXT;
+  payload: {
+    rangeString: string;
+  };
 }
 
 interface setRangePairsAction {
@@ -72,4 +80,5 @@ export type RangeActionTypes =
   | setSuitComboActiveAction
   | setRangeAllAction
   | setRangeBroadwayAction
-  | setRangePairsAction;
+  | setRangePairsAction
+  | setRangeTextAction;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 type Props = {
@@ -40,14 +40,36 @@ const TextArea: React.FC<Props> = ({
   onChange,
   className = "",
 }) => {
+  const [typeTimeout, setTypeTimeout] = useState(setTimeout(() => {}, 100));
+  const [lastEdited, setLastEdited] = useState(0);
+  const [textValue, setTextValue] = useState(value);
+  const onTextChange = (e: any) => {
+    const val = e.target.value;
+    if (typeTimeout) {
+      clearTimeout(typeTimeout);
+    }
+    setLastEdited(new Date().getTime());
+    setTextValue(val);
+    setTypeTimeout(
+      setTimeout(() => {
+        onChange(val);
+      }, 500)
+    );
+  };
+  useEffect(() => {
+    const time = new Date().getTime();
+    if (value !== textValue && time > lastEdited + 1000) {
+      setTextValue(value);
+    }
+  }, [value, textValue, lastEdited]);
   return (
     <TextAreaStyle
-      onChange={onChange}
+      onChange={onTextChange}
       rows={rows}
       cols={cols}
       className={className}
       placeholder={placeholder}
-      value={value}
+      value={textValue}
     />
   );
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
+import { colors } from "../styles";
 
 import { UIState } from "../lib";
 
@@ -23,6 +24,7 @@ import {
   setSuitComboInactive,
   setRangeBroadway,
   setRangePairs,
+  setRangeText,
   clearRange,
 } from "../redux/range/actions";
 
@@ -51,14 +53,31 @@ const RangeSelectorStyle = styled.div`
     height: 108px;
   }
 
+  .combo-count {
+    font-size: 14px;
+    line-height: 14px;
+    margin-bottom: 16px;
+    vertical-align: center;
+    color: rgba(0, 0, 0, 0.65);
+    font-family: "SF UI Text Regular";
+    .combo-count-selected {
+      color: ${colors.primary};
+    }
+  }
+
   .range-selector-bottom-bar {
-    margin-top: 24px;
     display: flex;
     justify-content: space-between;
     width: 624px;
   }
 
+  .range-selector-suit-matrix {
+    margin-top: 16px;
+  }
+
   .range-selector-controls {
+    /* margin-top: 8px; */
+    margin-top: 16px;
     flex-grow: 1;
     margin-right: 24px;
     .range-selector-controls-buttons {
@@ -77,6 +96,7 @@ type Props = {
   setComboInactive: (index: number) => void;
   setSuitComboActive: (index: number) => void;
   setSuitComboInactive: (index: number) => void;
+  setRangeText: (rangeString: string) => void;
   clearRange: () => void;
   setRangeAll: () => void;
   setRangeBroadway: () => void;
@@ -89,6 +109,7 @@ const RangeSelector: React.FC<Props> = ({
   setComboInactive,
   setSuitComboActive,
   setSuitComboInactive,
+  setRangeText,
   setRangePairs,
   setRangeBroadway,
   setRangeAll,
@@ -136,7 +157,7 @@ const RangeSelector: React.FC<Props> = ({
       )
     );
 
-  console.log(getComboCount(rangeCombos) / 1326);
+  const comboCount = getComboCount(rangeCombos);
   return (
     <RangeSelectorStyle>
       <div className="range-selector-top-bar">
@@ -173,7 +194,13 @@ const RangeSelector: React.FC<Props> = ({
       />
       <div className="range-selector-bottom-bar">
         <div className="range-selector-controls">
-          <Slider leftValue={0} rightValue={0.5} />
+          <div className="combo-count">
+            <span className="combo-count-selected">{comboCount}</span>/1326
+            combos selected{" "}
+            <span className="combo-count-selected">
+              ({((comboCount * 100) / 1326).toPrecision(3)}%)
+            </span>
+          </div>
           <div className="range-selector-controls-buttons">
             <Button variant="default" onClick={setRangeAll}>
               All
@@ -193,11 +220,12 @@ const RangeSelector: React.FC<Props> = ({
             cols={4}
             className="range-selector-text-area"
             placeholder={""}
-            onChange={() => {}}
+            onChange={setRangeText}
             value={rangeStr}
           />
         </div>
         <Matrix
+          className="range-selector-suit-matrix"
           selectElement={setSuitComboActive}
           deselectElement={setSuitComboInactive}
           elements={suitCombos}
@@ -229,6 +257,7 @@ const mapDispatchToProps = {
   setRangeBroadway,
   setRangePairs,
   setRangeAll,
+  setRangeText,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RangeSelector);
