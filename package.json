@@ -21,7 +21,6 @@
     "react-scripts": "3.4.3",
     "redux": "^4.0.5",
     "styled-components": "^5.1.1",
-    "throttle-debounce": "^2.3.0",
     "typescript": "~3.7.2"
   },
   "scripts": {

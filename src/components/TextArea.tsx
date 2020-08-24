@@ -15,6 +15,7 @@ const TextAreaStyle = styled.textarea<{
   cols: number;
   className: string;
   placeholder: string;
+  spellcheck: boolean;
 }>`
   width: 100%;
   resize: none;
@@ -41,14 +42,13 @@ const TextArea: React.FC<Props> = ({
   className = "",
 }) => {
   const [typeTimeout, setTypeTimeout] = useState(setTimeout(() => {}, 100));
-  const [lastEdited, setLastEdited] = useState(0);
+  const [focus, setFocus] = useState(false);
   const [textValue, setTextValue] = useState(value);
   const onTextChange = (e: any) => {
     const val = e.target.value;
     if (typeTimeout) {
       clearTimeout(typeTimeout);
     }
-    setLastEdited(new Date().getTime());
     setTextValue(val);
     setTypeTimeout(
       setTimeout(() => {
@@ -57,13 +57,15 @@ const TextArea: React.FC<Props> = ({
     );
   };
   useEffect(() => {
-    const time = new Date().getTime();
-    if (value !== textValue && time > lastEdited + 1000) {
+    if (!focus) {
       setTextValue(value);
     }
-  }, [value, textValue, lastEdited]);
+  }, [focus, value]);
   return (
     <TextAreaStyle
+      spellcheck={false}
+      onBlur={() => setFocus(false)}
+      onFocus={() => setFocus(true)}
       onChange={onTextChange}
       rows={rows}
       cols={cols}
