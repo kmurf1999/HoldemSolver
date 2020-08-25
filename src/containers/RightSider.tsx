@@ -1,5 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
+import { connect } from "react-redux";
 import styled from "styled-components";
+
+import Modal from "./Modal";
+import BoardSelector from "./BoardSelector";
+
+import { getCardElement } from "../Board";
 
 import { colors } from "../styles";
 
@@ -28,7 +34,7 @@ const RangeListItemStyle = styled.li<{ active: boolean }>`
               width: 4px;
               border-radius: 4px;
               background: ${colors.primary};
-              left: -2px;
+              left: 0px;
               top: 0;
               bottom: 0;
               margin: auto;
@@ -106,14 +112,45 @@ const RightSiderStyle = styled.div`
   .board-header {
     margin-left: 24px;
     margin-top: 24px;
+    margin-bottom: 24px;
+  }
+  .board-selector {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+  }
+  .board-selector-tile {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    color: red;
+    line-height: 42px;
+    font-family: "SF UI Text Regular";
+    text-align: center;
+    font-size: 16px;
+    .board-selector-tile-suit {
+      font-family: "Hiragino Sans";
+      font-size: 14px;
+    }
   }
 `;
 
 type Props = {
   className?: string;
+  board?: boolean[];
 };
 
-const RightSider: React.FC<Props> = ({ className = "" }) => {
+const RightSider: React.FC<Props> = ({ className = "", board = [] }) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  let activeCards: number[] = [];
+  board.forEach((c, i) => {
+    if (c) {
+      activeCards.push(i);
+    }
+  });
   return (
     <RightSiderStyle className={className}>
       <div className="header range-list-header">Ranges</div>
@@ -122,8 +159,28 @@ const RightSider: React.FC<Props> = ({ className = "" }) => {
         <RangeListItem className="range-list-item" />
       </ul>
       <div className="header board-header">Board</div>
+      <Modal open={modalOpen} closeModal={() => setModalOpen(false)}>
+        <BoardSelector />
+      </Modal>
+      <div className="board-selector">
+        {[0, 1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            onClick={() => setModalOpen(true)}
+            className="board-selector-tile"
+          >
+            {activeCards.length > i ? getCardElement(activeCards[i]) : ""}
+          </div>
+        ))}
+      </div>
     </RightSiderStyle>
   );
 };
 
-export default RightSider;
+const mapStateToProps = (state: any) => {
+  return {
+    board: state.board.board,
+  };
+};
+
+export default connect(mapStateToProps, null)(RightSider);

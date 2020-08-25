@@ -25,6 +25,21 @@ export const PAIR_MASK = 0b0000100011001110;
 export const SUITED_MASK = 0b1000010000100001;
 export const OFFSUITED_MASK = 0b0111101111011110;
 
+function charToSuit(c: string): number | null {
+  switch (c.toLowerCase()) {
+    case "s":
+      return 0;
+    case "h":
+      return 1;
+    case "c":
+      return 2;
+    case "d":
+      return 3;
+    default:
+      return null;
+  }
+}
+
 function charToRank(c: string): number {
   switch (c) {
     case "A":
@@ -55,6 +70,28 @@ type HandRange = {
   types: ComboType[];
   combos: number[];
 };
+
+function addSuitCombo(
+  combos: number[],
+  rank1: number,
+  rank2: number,
+  suit1: number,
+  suit2: number
+) {
+  let comboIndex: number;
+  let suitIndex: number;
+  if (suit1 === suit2) {
+    comboIndex = (12 - rank1) * 13 + (12 - rank2);
+  } else {
+    comboIndex = (12 - rank2) * 13 + (12 - rank1);
+  }
+  if (suit2 > suit1) {
+    suitIndex = suit1 * 4 + suit2;
+  } else {
+    suitIndex = suit2 * 4 + suit1;
+  }
+  combos[comboIndex] |= 1 << suitIndex;
+}
 
 function addCombo(
   combos: number[],
@@ -110,7 +147,13 @@ export function stringToRange(rangeStr: string): number[] {
       addCombo(combos, rank1, rank2, type, plus);
     }
     if (components[5]) {
-      // suit specific
+      console.log(components);
+      const rank1 = charToRank(components[6]);
+      const rank2 = charToRank(components[8]);
+      const suit1 = charToSuit(components[7]);
+      const suit2 = charToSuit(components[9]);
+      if (suit1 === null || suit2 === null) return;
+      addSuitCombo(combos, rank1, rank2, suit1, suit2);
     }
   });
   return combos;
@@ -300,7 +343,7 @@ export function rangeToString(combos: number[], types: ComboType[]): string {
   return ret.filter((x) => x !== null).join(",");
 }
 
-function getSuitColor(suitIndex: number) {
+export function getSuitColor(suitIndex: number) {
   switch (suitIndex) {
     case 0:
       return "black";
@@ -333,13 +376,25 @@ export function getSuitComboElement(
       RANK_TO_CHAR[firstRank],
       React.createElement(
         "span",
-        { fontSize: 18, style: { color: getSuitColor(firstSuit) } },
+        {
+          style: {
+            fontFamily: "Hiragino Sans",
+            fontSize: 14,
+            color: getSuitColor(firstSuit),
+          },
+        },
         SUIT_TO_CHAR[firstSuit]
       ),
       RANK_TO_CHAR[secondRank],
       React.createElement(
         "span",
-        { fontSize: 18, style: { color: getSuitColor(secondSuit) } },
+        {
+          style: {
+            fontFamily: "Hiragino Sans",
+            fontSize: 14,
+            color: getSuitColor(secondSuit),
+          },
+        },
         SUIT_TO_CHAR[secondSuit]
       )
     );
@@ -351,13 +406,25 @@ export function getSuitComboElement(
       RANK_TO_CHAR[secondRank],
       React.createElement(
         "span",
-        { fontSize: 18, style: { color: getSuitColor(secondSuit) } },
+        {
+          style: {
+            fontFamily: "Hiragino Sans",
+            fontSize: 14,
+            color: getSuitColor(secondSuit),
+          },
+        },
         SUIT_TO_CHAR[secondSuit]
       ),
       RANK_TO_CHAR[firstRank],
       React.createElement(
         "span",
-        { fontSize: 18, style: { color: getSuitColor(firstSuit) } },
+        {
+          style: {
+            fontFamily: "Hiragino Sans",
+            fontSize: 14,
+            color: getSuitColor(firstSuit),
+          },
+        },
         SUIT_TO_CHAR[firstSuit]
       )
     );

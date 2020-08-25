@@ -28,7 +28,10 @@ export type RangeState = {
 
 const defaultState: RangeState = { ...createEmptyRange(), activeComboIndex: 0 };
 
-const rangeReducer = (state = defaultState, action: RangeActionTypes) => {
+const rangeReducer = (
+  state = defaultState,
+  action: RangeActionTypes
+): RangeState => {
   switch (action.type) {
     case SET_RANGE_TEXT: {
       return {

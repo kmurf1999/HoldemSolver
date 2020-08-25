@@ -30,4 +30,5 @@ export const GlobalStyle = createGlobalStyle`
   .header {
     ${typography.header};
   }
+
 `;

@@ -8,16 +8,18 @@ const Layout = styled.div`
   min-height: 100%;
   width: 100%;
   display: flex;
+  height: 100vh;
+  overflow-x: hidden;
 
   .sider {
     min-width: 80px;
-    min-height: 100%;
     background: #fff;
   }
   .main {
     width: 100%;
     flex-grow: 1;
     padding: 24px;
+    overflow-y: auto;
   }
   .layout-right-sider {
     min-width: 320px;

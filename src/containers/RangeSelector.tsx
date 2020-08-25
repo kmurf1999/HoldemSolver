@@ -31,10 +31,10 @@ import {
 import Matrix from "../components/Matrix";
 import Button from "../components/Button";
 import Input from "../components/Input";
-import Slider from "../components/Slider";
 import TextArea from "../components/TextArea";
 
 const RangeSelectorStyle = styled.div`
+  margin-bottom: 24px;
   .range-selector-top-bar {
     display: flex;
     margin-bottom: 24px;
@@ -50,7 +50,7 @@ const RangeSelectorStyle = styled.div`
   }
 
   .range-selector-text-area {
-    height: 108px;
+    height: 120px;
   }
 
   .combo-count {
@@ -84,6 +84,18 @@ const RangeSelectorStyle = styled.div`
       margin: 8px 0;
       display: flex;
       justify-content: space-between;
+      /* > button {
+        border-radius: 0;
+        &:first-child {
+          border-radius: 8px 0 0 8px;
+        }
+        &:last-child {
+          border-radius: 0 8px 8px 0;
+        }
+        &:not(:last-child) {
+          border-right: 1px solid rgba(0, 0, 0, 0.15);
+        }
+      } */
     }
   }
 `;
@@ -230,7 +242,7 @@ const RangeSelector: React.FC<Props> = ({
           deselectElement={setSuitComboInactive}
           elements={suitCombos}
           states={suitStates}
-          width="200px"
+          width="236px"
           height="200px"
           rows={4}
           cols={4}
