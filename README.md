@@ -2,13 +2,17 @@
 
 A react-based frontend for Texas Holdem Poker solver written in Typescript
 
+## Project Status
+
+Currently working on responsive design and creating the remaining UI components with **React.js** and **styled-components**
+
 ## Getting started
 
-### Clone repository
+Clone repository
 `git clone https://github.com/kmurf1999/HoldemSolverReact.git && cd ./HoldemSolverReact`
 
-### Install dependencies
+Install dependencies
 `npm install` or `yarn i`
 
-## Run application
+Run development server application
 `npn run start` or `yarn start`
