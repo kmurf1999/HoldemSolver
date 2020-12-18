@@ -8,7 +8,7 @@ services:
       - "./frontend:/app"
       - "/app/node_modules"
     ports:
-      - 3001:3000
+      - 3000:3000
     stdin_open: true
 
   backend: # Rust graqhl server
@@ -20,7 +20,7 @@ services:
     volumes:
       - "./backend:/server"
     ports:
-      - 4001:4000
+      - 3001:3001
 
   db: # postgresql database
     image: postgres

@@ -86,7 +86,7 @@ async fn main() {
             )
     });
 
-    log::info!("Listening on 127.0.0.1:4000");
+    log::info!("Listening on 127.0.0.1:3000");
 
     let state = warp::any().map(|| Context);
     let graphql_filter = juniper_warp::make_graphql_filter(schema(), state.boxed());
@@ -99,6 +99,6 @@ async fn main() {
             .or(warp::path("graphql").and(graphql_filter))
             .with(log),
     )
-    .run(([127, 0, 0, 1], 4000))
+    .run(([127, 0, 0, 1], 3000))
     .await
 }
