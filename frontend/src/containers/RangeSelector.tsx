@@ -1,9 +1,9 @@
-import React from "react";
-import { connect } from "react-redux";
-import styled from "styled-components";
-import { colors } from "../styles";
-
-import { UIState } from "../lib";
+import React from 'react';
+import { connect, ConnectedProps } from 'react-redux';
+import styled from 'styled-components';
+import { colors } from '../styles';
+import { UIState } from '../lib';
+import { RootState } from '../redux';
 
 import {
   ComboType,
@@ -15,7 +15,7 @@ import {
   OFFSUITED_MASK,
   SUITED_MASK,
   PAIR_MASK,
-} from "../HandRange";
+} from '../HandRange';
 import {
   setRangeAll,
   setComboActive,
@@ -26,12 +26,10 @@ import {
   setRangePairs,
   setRangeText,
   clearRange,
-} from "../redux/range/actions";
+} from '../redux/range/actions';
 
-import Matrix from "../components/Matrix";
-import Button from "../components/Button";
-import Input from "../components/Input";
-import TextArea from "../components/TextArea";
+import Matrix from '../components/Matrix';
+import TextArea from '../components/TextArea';
 
 const RangeSelectorStyle = styled.div`
   display: flex;
@@ -61,7 +59,7 @@ const RangeSelectorStyle = styled.div`
   .combo-count {
     font-size: inherit;
     /* line-height: 14px; */
-    margin-bottom: .6em;
+    margin-bottom: 0.6em;
     vertical-align: center;
     color: rgba(0, 0, 0, 0.45);
     font-family: 'Open Sans', 'sans-serif';
@@ -71,16 +69,15 @@ const RangeSelectorStyle = styled.div`
   }
 
   .range-selector-bottom-bar {
-    margin-top: .8em;
+    margin-top: 0.8em;
     display: grid;
     grid-template-columns: 1fr minmax(auto, 250px);
-    grid-gap: .8em;
+    grid-gap: 0.8em;
     width: 100%;
     position: relative;
   }
 
   .range-selector-suit-matrix {
-
   }
 
   .range-selector-controls {
@@ -97,10 +94,10 @@ const RangeSelectorStyle = styled.div`
         }
       }
       .range-selector-control-btn {
-        color: rgba(0,0,0,0.65);
+        color: rgba(0, 0, 0, 0.65);
         cursor: pointer;
         position: relative;
-        padding: .8em 0;
+        padding: 0.8em 0;
         text-align: center;
         &:after {
           content: '';
@@ -108,7 +105,7 @@ const RangeSelectorStyle = styled.div`
           height: 3px;
           width: 0;
           background: ${colors.primary};
-          transition: width .2s, left .2s;
+          transition: width 0.2s, left 0.2s;
           bottom: 0;
           left: 50%;
         }
@@ -123,7 +120,31 @@ const RangeSelectorStyle = styled.div`
   }
 `;
 
-type Props = {
+const mapStateToProps = (state: RootState) => {
+  return {
+    rangeCombos: state.range.combos,
+    rangeTypes: state.range.types,
+    activeComboIndex: state.range.activeComboIndex,
+  };
+};
+
+const mapDispatchToProps = {
+  setComboActive,
+  setComboInactive,
+  clearRange,
+  setSuitComboActive,
+  setSuitComboInactive,
+  setRangeBroadway,
+  setRangePairs,
+  setRangeAll,
+  setRangeText,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type Props = PropsFromRedux & {
   rangeCombos: number[];
   rangeTypes: ComboType[];
   activeComboIndex: number;
@@ -138,61 +159,41 @@ type Props = {
   setRangeBroadway: () => void;
   setRangePairs: () => void;
 };
-const RangeSelector: React.FC<Props> = ({
-  rangeCombos,
-  rangeTypes,
-  setComboActive,
-  setComboInactive,
-  setSuitComboActive,
-  setSuitComboInactive,
-  setRangeText,
-  setRangePairs,
-  setRangeBroadway,
-  setRangeAll,
-  clearRange,
-  activeComboIndex,
-  className = ""
-}) => {
+
+function RangeSelector(props: Props): React.ReactElement {
+  const {
+    rangeCombos,
+    rangeTypes,
+    setComboActive,
+    setComboInactive,
+    setSuitComboActive,
+    setSuitComboInactive,
+    setRangeText,
+    setRangePairs,
+    setRangeBroadway,
+    setRangeAll,
+    clearRange,
+    activeComboIndex,
+    className = '',
+  } = props;
   const rangeStr = rangeToString(rangeCombos, rangeTypes);
-  const comboNames: string[] = rangeCombos.map((_, index) =>
-    getComboName(index)
-  );
+  const comboNames: string[] = rangeCombos.map((_, index) => getComboName(index));
   const comboStates: UIState[] = rangeCombos.map((combo, index) => {
     switch (rangeTypes[index]) {
       case ComboType.OFFSUITED:
-        return combo === OFFSUITED_MASK
-          ? UIState.ACTIVE
-          : combo === 0
-          ? UIState.INACTIVE
-          : UIState.PARTIAL;
+        return combo === OFFSUITED_MASK ? UIState.ACTIVE : combo === 0 ? UIState.INACTIVE : UIState.PARTIAL;
       case ComboType.SUITED:
-        return combo === SUITED_MASK
-          ? UIState.ACTIVE
-          : combo === 0
-          ? UIState.INACTIVE
-          : UIState.PARTIAL;
+        return combo === SUITED_MASK ? UIState.ACTIVE : combo === 0 ? UIState.INACTIVE : UIState.PARTIAL;
       case ComboType.PAIR:
-        return combo === PAIR_MASK
-          ? UIState.ACTIVE
-          : combo === 0
-          ? UIState.INACTIVE
-          : UIState.PARTIAL;
+        return combo === PAIR_MASK ? UIState.ACTIVE : combo === 0 ? UIState.INACTIVE : UIState.PARTIAL;
       default:
         return UIState.INACTIVE;
     }
   });
-  const suitCombos = new Array(16)
-    .fill(0)
-    .map((_, i) => getSuitComboElement(activeComboIndex, i));
+  const suitCombos = new Array(16).fill(0).map((_, i) => getSuitComboElement(activeComboIndex, i));
   const suitStates = new Array(16)
     .fill(0)
-    .map((_, i) =>
-      getSuitComboState(
-        rangeTypes[activeComboIndex],
-        rangeCombos[activeComboIndex],
-        i
-      )
-    );
+    .map((_, i) => getSuitComboState(rangeTypes[activeComboIndex], rangeCombos[activeComboIndex], i));
 
   const comboCount = getComboCount(rangeCombos);
   return (
@@ -209,11 +210,8 @@ const RangeSelector: React.FC<Props> = ({
       <div className="range-selector-bottom-bar">
         <div className="range-selector-controls">
           <div className="combo-count">
-            <span className="combo-count-selected">{comboCount}</span>/1326
-            combos selected{" "}
-            <span className="combo-count-selected">
-              ({((comboCount * 100) / 1326).toPrecision(3)}%)
-            </span>
+            <span className="combo-count-selected">{comboCount}</span>/1326 combos selected{' '}
+            <span className="combo-count-selected">({((comboCount * 100) / 1326).toPrecision(3)}%)</span>
           </div>
           <div className="range-selector-controls-buttons">
             <div className="range-selector-control-btn" onClick={setRangeAll}>
@@ -250,26 +248,6 @@ const RangeSelector: React.FC<Props> = ({
       </div>
     </RangeSelectorStyle>
   );
-};
+}
 
-const mapStateToProps = (state: any) => {
-  return {
-    rangeCombos: state.range.combos,
-    rangeTypes: state.range.types,
-    activeComboIndex: state.range.activeComboIndex,
-  };
-};
-
-const mapDispatchToProps = {
-  setComboActive,
-  setComboInactive,
-  clearRange,
-  setSuitComboActive,
-  setSuitComboInactive,
-  setRangeBroadway,
-  setRangePairs,
-  setRangeAll,
-  setRangeText,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(RangeSelector);
+export default connector(RangeSelector);

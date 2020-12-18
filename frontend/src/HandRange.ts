@@ -1,25 +1,11 @@
-import React, { ReactNode } from "react";
-import { UIState } from "./lib";
+import React, { ReactNode } from 'react';
+import { UIState } from './lib';
 
 export const COMBO_COUNT = 169;
 export const SUIT_COUNT = 4;
-export const SUIT_TO_CHAR = ["♠", "♥", "♣", "♦"];
-export const TEXT_SUIT_TO_CHAR = ["s", "h", "c", "d"];
-export const RANK_TO_CHAR = [
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  "T",
-  "J",
-  "Q",
-  "K",
-  "A",
-];
+export const SUIT_TO_CHAR = ['♠', '♥', '♣', '♦'];
+export const TEXT_SUIT_TO_CHAR = ['s', 'h', 'c', 'd'];
+export const RANK_TO_CHAR = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
 
 export const PAIR_MASK = 0b0000100011001110;
 export const SUITED_MASK = 0b1000010000100001;
@@ -27,13 +13,13 @@ export const OFFSUITED_MASK = 0b0111101111011110;
 
 function charToSuit(c: string): number | null {
   switch (c.toLowerCase()) {
-    case "s":
+    case 's':
       return 0;
-    case "h":
+    case 'h':
       return 1;
-    case "c":
+    case 'c':
       return 2;
-    case "d":
+    case 'd':
       return 3;
     default:
       return null;
@@ -42,15 +28,15 @@ function charToSuit(c: string): number | null {
 
 function charToRank(c: string): number {
   switch (c) {
-    case "A":
+    case 'A':
       return 12;
-    case "K":
+    case 'K':
       return 11;
-    case "Q":
+    case 'Q':
       return 10;
-    case "J":
+    case 'J':
       return 9;
-    case "T":
+    case 'T':
       return 8;
     default:
       return Number(c) - 2;
@@ -71,13 +57,7 @@ type HandRange = {
   combos: number[];
 };
 
-function addSuitCombo(
-  combos: number[],
-  rank1: number,
-  rank2: number,
-  suit1: number,
-  suit2: number
-) {
+function addSuitCombo(combos: number[], rank1: number, rank2: number, suit1: number, suit2: number) {
   let comboIndex: number;
   let suitIndex: number;
   if (suit1 === suit2) {
@@ -93,20 +73,14 @@ function addSuitCombo(
   combos[comboIndex] |= 1 << suitIndex;
 }
 
-function addCombo(
-  combos: number[],
-  rank1: number,
-  rank2: number,
-  type: string,
-  plus: boolean
-) {
+function addCombo(combos: number[], rank1: number, rank2: number, type: string, plus: boolean) {
   switch (type) {
-    case "o": {
+    case 'o': {
       const index = (12 - rank2) * 13 + (12 - rank1);
       combos[index] = OFFSUITED_MASK;
       break;
     }
-    case "s": {
+    case 's': {
       const index = (12 - rank1) * 13 + (12 - rank2);
       combos[index] = SUITED_MASK;
       break;
@@ -133,14 +107,14 @@ function addCombo(
 
 export function stringToRange(rangeStr: string): number[] {
   const reg = /(([2-9TJQAK]{2})(S|O)?(\+)?)|(([2-9TJQKA])([SHCD])([2-9TJQKA])([SHCD]))/;
-  let combos = new Array(169).fill(0);
-  const elements = rangeStr.toUpperCase().split(",");
+  const combos = new Array(169).fill(0);
+  const elements = rangeStr.toUpperCase().split(',');
   elements.forEach((element) => {
     const components = reg.exec(element);
     if (!components) return;
     if (components[1]) {
       // not suit specific
-      const type = components[3] ? components[3].toLowerCase() : "both";
+      const type = components[3] ? components[3].toLowerCase() : 'both';
       const rank1 = charToRank(components[2][0]);
       const rank2 = charToRank(components[2][1]);
       const plus = components[4] ? true : false;
@@ -160,13 +134,13 @@ export function stringToRange(rangeStr: string): number[] {
 }
 
 export function createEmptyRange(): HandRange {
-  let types = [];
-  let combos = [];
+  const types = [];
+  const combos = [];
   for (let i = 0; i < COMBO_COUNT; i++) {
-    let combo = 0;
+    const combo = 0;
     let type: ComboType;
-    let firstRank = 12 - Math.floor(i / 13);
-    let secondRank = 12 - (i % 13);
+    const firstRank = 12 - Math.floor(i / 13);
+    const secondRank = 12 - (i % 13);
     if (firstRank < secondRank) {
       type = ComboType.OFFSUITED;
     } else if (firstRank > secondRank) {
@@ -205,7 +179,7 @@ export function getComboCount(combos: number[]): number {
 }
 
 export function rangeToString(combos: number[], types: ComboType[]): string {
-  let ret = new Array(169).fill(null);
+  const ret = new Array(169).fill(null);
   for (let i = 0; i < COMBO_COUNT; i++) {
     const ranks = [12 - Math.floor(i / 13), 12 - (i % 13)];
     const firstRank = RANK_TO_CHAR[Math.max(...ranks)];
@@ -232,7 +206,7 @@ export function rangeToString(combos: number[], types: ComboType[]): string {
   let endIdx = 0,
     endStr = null;
   for (let i = 0; i < 13; i++) {
-    let j = i * 13 + i;
+    const j = i * 13 + i;
     if (ret[j]) {
       endIdx = j;
       endStr = ret[j];
@@ -297,8 +271,8 @@ export function rangeToString(combos: number[], types: ComboType[]): string {
   ret.sort();
   for (let i = 0; i < n - 1; i++) {
     if (ret[i] === null || ret[i + 1] === null) continue;
-    let x = ret[i].replace(reg, "$1$3");
-    let y = ret[i + 1].replace(reg, "$1$3");
+    const x = ret[i].replace(reg, '$1$3');
+    const y = ret[i + 1].replace(reg, '$1$3');
     if (x === y) {
       ret[i] = null;
       ret[i + 1] = null;
@@ -326,33 +300,33 @@ export function rangeToString(combos: number[], types: ComboType[]): string {
         const suits = [Math.floor(j / 4), j % 4];
         if (ranks[0] > ranks[1]) {
           ret.push(
-            `${RANK_TO_CHAR[ranks[0]]}${TEXT_SUIT_TO_CHAR[suits[0]]}${
-              RANK_TO_CHAR[ranks[1]]
-            }${TEXT_SUIT_TO_CHAR[suits[1]]}`
+            `${RANK_TO_CHAR[ranks[0]]}${TEXT_SUIT_TO_CHAR[suits[0]]}${RANK_TO_CHAR[ranks[1]]}${
+              TEXT_SUIT_TO_CHAR[suits[1]]
+            }`,
           );
         } else {
           ret.push(
-            `${RANK_TO_CHAR[ranks[1]]}${TEXT_SUIT_TO_CHAR[suits[1]]}${
-              RANK_TO_CHAR[ranks[0]]
-            }${TEXT_SUIT_TO_CHAR[suits[0]]}`
+            `${RANK_TO_CHAR[ranks[1]]}${TEXT_SUIT_TO_CHAR[suits[1]]}${RANK_TO_CHAR[ranks[0]]}${
+              TEXT_SUIT_TO_CHAR[suits[0]]
+            }`,
           );
         }
       }
     }
   }
-  return ret.filter((x) => x !== null).join(",");
+  return ret.filter((x) => x !== null).join(',');
 }
 
 export function getSuitColor(suitIndex: number) {
   switch (suitIndex) {
     case 0:
-      return "black";
+      return 'black';
     case 1:
-      return "red";
+      return 'red';
     case 2:
-      return "green";
+      return 'green';
     case 3:
-      return "blue";
+      return 'blue';
   }
 }
 
@@ -361,83 +335,76 @@ export function getSuitColor(suitIndex: number) {
  * @param comboIndex
  * @param suitIndex
  */
-export function getSuitComboElement(
-  comboIndex: number,
-  suitIndex: number
-): ReactNode {
-  let firstRank = 12 - Math.floor(comboIndex / 13);
-  let secondRank = 12 - (comboIndex % 13);
-  let firstSuit = Math.floor(suitIndex / 4);
-  let secondSuit = suitIndex % 4;
+export function getSuitComboElement(comboIndex: number, suitIndex: number): ReactNode {
+  const firstRank = 12 - Math.floor(comboIndex / 13);
+  const secondRank = 12 - (comboIndex % 13);
+  const firstSuit = Math.floor(suitIndex / 4);
+  const secondSuit = suitIndex % 4;
   if (firstRank > secondRank) {
     return React.createElement(
-      "div",
+      'div',
       null,
       RANK_TO_CHAR[firstRank],
       React.createElement(
-        "span",
+        'span',
         {
           style: {
-            fontFamily: "Hiragino Sans",
+            fontFamily: 'Hiragino Sans',
             fontSize: 14,
             color: getSuitColor(firstSuit),
           },
         },
-        SUIT_TO_CHAR[firstSuit]
+        SUIT_TO_CHAR[firstSuit],
       ),
       RANK_TO_CHAR[secondRank],
       React.createElement(
-        "span",
+        'span',
         {
           style: {
-            fontFamily: "Hiragino Sans",
+            fontFamily: 'Hiragino Sans',
             fontSize: 14,
             color: getSuitColor(secondSuit),
           },
         },
-        SUIT_TO_CHAR[secondSuit]
-      )
+        SUIT_TO_CHAR[secondSuit],
+      ),
     );
     // return `${RANK_TO_CHAR[firstRank]}${SUIT_TO_CHAR[firstSuit]}${RANK_TO_CHAR[secondRank]}${SUIT_TO_CHAR[secondSuit]}`;
   } else {
     return React.createElement(
-      "div",
+      'div',
       null,
       RANK_TO_CHAR[secondRank],
       React.createElement(
-        "span",
+        'span',
         {
           style: {
-            fontFamily: "Hiragino Sans",
+            fontFamily: 'Hiragino Sans',
             fontSize: 14,
             color: getSuitColor(secondSuit),
           },
         },
-        SUIT_TO_CHAR[secondSuit]
+        SUIT_TO_CHAR[secondSuit],
       ),
       RANK_TO_CHAR[firstRank],
       React.createElement(
-        "span",
+        'span',
         {
           style: {
-            fontFamily: "Hiragino Sans",
+            fontFamily: 'Hiragino Sans',
             fontSize: 14,
             color: getSuitColor(firstSuit),
           },
         },
-        SUIT_TO_CHAR[firstSuit]
-      )
+        SUIT_TO_CHAR[firstSuit],
+      ),
     );
 
     // return `${RANK_TO_CHAR[secondRank]}${SUIT_TO_CHAR[secondSuit]}${RANK_TO_CHAR[firstRank]}${SUIT_TO_CHAR[firstSuit]}`;
   }
 }
 
-export function getSuitComboState(
-  type: ComboType,
-  combo: number,
-  suitIndex: number
-): UIState {
+export function getSuitComboState(type: ComboType, combo: number, suitIndex: number): UIState {
   const suitIndexShifted = 1 << suitIndex;
   switch (type) {
     case ComboType.OFFSUITED:

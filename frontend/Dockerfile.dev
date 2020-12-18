@@ -1,11 +1,10 @@
-FROM node:10-alpine
+FROM node
 
-RUN mkdir -p /app
 WORKDIR /app
-COPY package*.json /app
+COPY package*.json .
 
 RUN yarn install
 
-COPY . /app
+COPY . .
 
 CMD "yarn" "start"

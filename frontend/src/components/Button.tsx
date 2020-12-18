@@ -1,13 +1,13 @@
-import React from "react";
-import styled from "styled-components";
-import { colors } from "../styles";
+import React, { ReactElement, MouseEvent } from 'react';
+import styled from 'styled-components';
+import { colors } from '../styles';
 
 type ButtonProps = {
-  // 'default', 'primary', 'error', 'warning'
-  variant?: "default" | "primary" | "warning";
+  variant?: 'default' | 'primary' | 'warning';
   className?: string;
-  icon?: any;
-  onClick: (...args: any[]) => any;
+  icon?: ReactElement;
+  children: ReactElement;
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void;
 };
 
 const ButtonStyle = styled.button<{ variant: string }>`
@@ -17,45 +17,40 @@ const ButtonStyle = styled.button<{ variant: string }>`
   outline: none;
   border: none;
   cursor: pointer;
-  padding: .8em 1em;
+  padding: 0.8em 1em;
   border-radius: 2px;
   background: ${(props) => {
     switch (props.variant) {
-      case "primary":
+      case 'primary':
         return colors.primary;
-      case "warning":
+      case 'warning':
         return colors.warning;
       default:
-        return "#fff";
+        return '#fff';
     }
   }};
   color: ${(props) => {
     switch (props.variant) {
-      case "primary":
-      case "warning":
-        return "#fff";
+      case 'primary':
+      case 'warning':
+        return '#fff';
       default:
-        return "rgba(0,0,0,0.65)";
+        return 'rgba(0,0,0,0.65)';
     }
   }};
   > svg {
-    margin-left: .8em;
+    margin-left: 0.8em;
   }
 `;
 
-const Button: React.FC<ButtonProps> = ({
-  variant = "default",
-  children,
-  className = "",
-  icon = null,
-  onClick,
-}) => {
+function Button(props: ButtonProps): React.ReactElement {
+  const { variant = 'default', children, className = '', icon = null, onClick } = props;
   return (
     <ButtonStyle onClick={onClick} className={className} variant={variant}>
       {children}
       {icon}
     </ButtonStyle>
   );
-};
+}
 
 export default Button;

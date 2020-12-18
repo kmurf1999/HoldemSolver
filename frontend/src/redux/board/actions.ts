@@ -1,4 +1,4 @@
-import { BoardActionTypes, TOGGLE_CARD } from "./types";
+import { BoardActionTypes, TOGGLE_CARD } from './types';
 
 export function toggleCard(cardIndex: number): BoardActionTypes {
   return {

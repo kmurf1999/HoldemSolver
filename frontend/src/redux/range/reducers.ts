@@ -1,4 +1,4 @@
-import update from "react-addons-update";
+import update from 'react-addons-update';
 import {
   RangeActionTypes,
   SET_COMBO_ACTIVE,
@@ -10,15 +10,8 @@ import {
   SET_RANGE_PAIRS,
   SET_RANGE_TEXT,
   CLEAR_RANGE,
-} from "./types";
-import {
-  stringToRange,
-  createEmptyRange,
-  ComboType,
-  OFFSUITED_MASK,
-  SUITED_MASK,
-  PAIR_MASK,
-} from "../../HandRange";
+} from './types';
+import { stringToRange, createEmptyRange, ComboType, OFFSUITED_MASK, SUITED_MASK, PAIR_MASK } from '../../HandRange';
 
 export type RangeState = {
   combos: number[];
@@ -28,10 +21,7 @@ export type RangeState = {
 
 const defaultState: RangeState = { ...createEmptyRange(), activeComboIndex: 0 };
 
-const rangeReducer = (
-  state = defaultState,
-  action: RangeActionTypes
-): RangeState => {
+const rangeReducer = (state = defaultState, action: RangeActionTypes): RangeState => {
   switch (action.type) {
     case SET_RANGE_TEXT: {
       return {
@@ -40,7 +30,7 @@ const rangeReducer = (
       };
     }
     case SET_RANGE_ALL: {
-      let combos = [...state.combos];
+      const combos = [...state.combos];
       for (let i = 0; i < 169; i++) {
         switch (state.types[i]) {
           case ComboType.OFFSUITED:
@@ -60,9 +50,9 @@ const rangeReducer = (
       };
     }
     case SET_RANGE_PAIRS: {
-      let combos = [...state.combos];
+      const combos = [...state.combos];
       for (let i = 0; i < 13; i++) {
-        let j = i * 13 + i;
+        const j = i * 13 + i;
         combos[j] = PAIR_MASK;
       }
       return {
@@ -71,7 +61,7 @@ const rangeReducer = (
       };
     }
     case SET_RANGE_BROADWAY: {
-      let combos = [...state.combos];
+      const combos = [...state.combos];
       for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {
           const k = i * 13 + j;

@@ -9,7 +9,7 @@ import {
   SET_RANGE_BROADWAY,
   SET_RANGE_PAIRS,
   SET_RANGE_TEXT,
-} from "./types";
+} from './types';
 
 export function setRangeText(rangeString: string): RangeActionTypes {
   return {

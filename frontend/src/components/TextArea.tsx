@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import React, { useState, useEffect, ChangeEvent } from 'react';
+import styled from 'styled-components';
 
-type Props = {
+type TextAreaProps = {
   onChange: (...args: any[]) => void;
   value: string;
   placeholder?: string;
@@ -24,7 +24,7 @@ const TextAreaStyle = styled.textarea<{
   border: 0;
   outline: 0;
   padding: 16px;
-  box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   font-family: 'Open Sans', 'sans-serif';
   font-size: inherit;
   color: rgba(0, 0, 0, 0.85);
@@ -34,19 +34,14 @@ const TextAreaStyle = styled.textarea<{
   }
 `;
 
-const TextArea: React.FC<Props> = ({
-  rows,
-  cols,
-  value,
-  onChange,
-  placeholder = "",
-  className = "",
-}) => {
-  const [typeTimeout, setTypeTimeout] = useState(setTimeout(() => {}, 100));
+function TextArea(props: TextAreaProps): React.ReactElement {
+  const { rows, cols, value, onChange, className = '' } = props;
+  const placeholder = props.placeholder || '';
+  const [typeTimeout, setTypeTimeout] = useState(setTimeout(undefined, null));
   const [focus, setFocus] = useState(false);
   const [textValue, setTextValue] = useState(value);
-  const onTextChange = (e: any) => {
-    const val = e.target.value;
+  function onTextChange(e: ChangeEvent<HTMLTextAreaElement>) {
+    const val = (e.target as HTMLTextAreaElement).value;
     if (typeTimeout) {
       clearTimeout(typeTimeout);
     }
@@ -54,9 +49,9 @@ const TextArea: React.FC<Props> = ({
     setTypeTimeout(
       setTimeout(() => {
         onChange(val);
-      }, 500)
+      }, 500),
     );
-  };
+  }
   useEffect(() => {
     if (!focus) {
       setTextValue(value);
@@ -75,6 +70,6 @@ const TextArea: React.FC<Props> = ({
       value={textValue}
     />
   );
-};
+}
 
 export default TextArea;
