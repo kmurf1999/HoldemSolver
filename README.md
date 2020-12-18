@@ -19,3 +19,5 @@ Holdem Solver is an free to use, open source web-application similar to FlopZill
 # License
 
 This project is MIT Licensed
+
+Copyright (c) 2020 Kyle Murphy
