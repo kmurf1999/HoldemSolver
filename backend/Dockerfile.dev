@@ -1,0 +1,9 @@
+FROM rust:1.43
+
+RUN mkdir -p /server
+WORKDIR /server
+
+COPY -r src/ /server
+COPY Cargo.* /server
+
+CMD "cargo" "run"

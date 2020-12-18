@@ -4,7 +4,7 @@ import styled from "styled-components";
 type Props = {
   onChange: (...args: any[]) => void;
   value: string;
-  placeholder: string;
+  placeholder?: string;
   rows: number;
   cols: number;
   className?: string;
@@ -37,9 +37,9 @@ const TextAreaStyle = styled.textarea<{
 const TextArea: React.FC<Props> = ({
   rows,
   cols,
-  placeholder,
   value,
   onChange,
+  placeholder = "",
   className = "",
 }) => {
   const [typeTimeout, setTypeTimeout] = useState(setTimeout(() => {}, 100));

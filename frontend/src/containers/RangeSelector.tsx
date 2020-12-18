@@ -233,7 +233,7 @@ const RangeSelector: React.FC<Props> = ({
             rows={4}
             cols={4}
             className="range-selector-text-area"
-            placeholder={""}
+            placeholder="Enter range e.g. (QQ+,AK)"
             onChange={setRangeText}
             value={rangeStr}
           />
