@@ -11,10 +11,10 @@ interface MatrixTileProps {
 const MatrixTileStyle = styled.div<{ state: UIState; id: string }>`
   background: ${(props) => {
     switch (props.state) {
+      case UIState.PARTIAL:
       case UIState.INACTIVE:
         return "#fff";
       case UIState.ACTIVE:
-      case UIState.PARTIAL:
         return colors.primary;
       case UIState.UNAVAILABLE:
         return "rgba(0,0,0,0.05)";
@@ -27,40 +27,48 @@ const MatrixTileStyle = styled.div<{ state: UIState; id: string }>`
       case UIState.ACTIVE:
         return "#fff";
       case UIState.INACTIVE:
-        return "rgba(0,0,0,0.45)";
+        return "rgba(0,0,0,0.55)";
       case UIState.UNAVAILABLE:
         return "transparent";
     }
   }};
 
-  ${(props) => {
-    if (props.state === UIState.PARTIAL) {
-      return `
-      &::after {
-        content: "";
-        position: absolute;
-        width: 10px;
-        height: 10px;
-        background: ${colors.info};
-        border-radius: 50%;
-        left: 6px;
-        bottom: 6px;
-      }
-      `;
-    }
-  }}
+  .triangle {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    display: ${props => props.state === UIState.PARTIAL ? "normal" : "none"};
+  }
+
+  .matrix-tile-children {
+    position: relative;
+  }
 
   * {
     pointer-events: none;
     display: ${(props) =>
       props.state === UIState.UNAVAILABLE ? "none" : "inline"};
   }
-  position: relative;
-  border-radius: 8px;
-  font-family: "SF UI Text Regular";
-  font-size: 16px;
 
-  padding: 4px;
+  &:hover {
+    box-shadow: 0px 5px 12px rgba(0,0,0,0.2);
+    z-index: 999;
+  }
+
+  box-shadow: ${props => props.state === UIState.UNAVAILABLE ? "none !important" : "0px 4px 12px rgba(0,0,0,0.1)"};
+  
+
+  overflow: hidden;
+  position: relative;
+  border-radius: 2px;
+  font-family: 'Open Sans', 'sans-serif';
+  font-weight: 300;
+  font-size: inherit;
+
+  padding: .2em .4em;
+
   cursor: ${(props) =>
     props.state === UIState.UNAVAILABLE ? "normal" : "pointer"};
 `;
@@ -68,7 +76,12 @@ const MatrixTileStyle = styled.div<{ state: UIState; id: string }>`
 const MatrixTile: React.FC<MatrixTileProps> = ({ index, state, children }) => {
   return (
     <MatrixTileStyle state={state} id={index.toString()}>
-      {children}
+      <svg className="triangle" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <path d="m 0 0 L 100 0 M 100 0 Q 80 80 0 100 L 0 0" fill={colors.primary} />
+      </svg>
+      <div className="matrix-tile-children">
+        {children}
+      </div>
     </MatrixTileStyle>
   );
 };
@@ -76,8 +89,6 @@ const MatrixTile: React.FC<MatrixTileProps> = ({ index, state, children }) => {
 interface MatrixProps {
   cols: number;
   rows: number;
-  width: string;
-  height: string;
   elements: ReactNode[];
   states: UIState[];
   className?: string;
@@ -91,13 +102,9 @@ interface MatrixState {
 }
 
 const MatrixStyle = styled.div<{
-  width: string;
-  height: string;
   rows: number;
   cols: number;
 }>`
-  width: ${(props) => props.width};
-  height: ${(props) => props.height};
   display: grid;
   grid-template-columns: ${(props) => `repeat(${props.cols}, 1fr)`};
   grid-template-rows: ${(props) => `repeat(${props.rows}, 1fr)`};
@@ -111,8 +118,6 @@ const Matrix: React.FC<MatrixProps> = ({
   states,
   rows,
   cols,
-  width,
-  height,
   selectElement,
   deselectElement,
   className = "",
@@ -159,8 +164,6 @@ const Matrix: React.FC<MatrixProps> = ({
       onMouseOver={onMouseOver}
       rows={rows}
       cols={cols}
-      width={width}
-      height={height}
     >
       {elements.map((element: any, index: number) => (
         <MatrixTile key={index} index={index} state={states[index]}>

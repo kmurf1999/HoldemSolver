@@ -34,11 +34,12 @@ import Input from "../components/Input";
 import TextArea from "../components/TextArea";
 
 const RangeSelectorStyle = styled.div`
-  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+
   .range-selector-top-bar {
     display: flex;
     margin-bottom: 24px;
-    width: 624px;
     .range-selector-top-bar-item {
       &:first-child {
         flex-grow: 1;
@@ -49,53 +50,75 @@ const RangeSelectorStyle = styled.div`
     }
   }
 
+  .range-selector-matrix {
+    flex-grow: 1;
+  }
+
   .range-selector-text-area {
     height: 120px;
   }
 
   .combo-count {
-    font-size: 14px;
-    line-height: 14px;
-    margin-bottom: 16px;
+    font-size: inherit;
+    /* line-height: 14px; */
+    margin-bottom: .6em;
     vertical-align: center;
-    color: rgba(0, 0, 0, 0.65);
-    font-family: "SF UI Text Regular";
+    color: rgba(0, 0, 0, 0.45);
+    font-family: 'Open Sans', 'sans-serif';
     .combo-count-selected {
       color: ${colors.primary};
     }
   }
 
   .range-selector-bottom-bar {
-    display: flex;
-    justify-content: space-between;
-    width: 624px;
+    margin-top: .8em;
+    display: grid;
+    grid-template-columns: 1fr minmax(auto, 250px);
+    grid-gap: .8em;
+    width: 100%;
+    position: relative;
   }
 
   .range-selector-suit-matrix {
-    margin-top: 16px;
+
   }
 
   .range-selector-controls {
     /* margin-top: 8px; */
-    margin-top: 16px;
     flex-grow: 1;
-    margin-right: 24px;
     .range-selector-controls-buttons {
-      margin: 8px 0;
-      display: flex;
-      justify-content: space-between;
-      /* > button {
-        border-radius: 0;
-        &:first-child {
-          border-radius: 8px 0 0 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.05);
+      .range-selector-clear-btn {
+        color: ${colors.warning} !important;
+        &:after {
+          background: ${colors.warning} !important;
         }
-        &:last-child {
-          border-radius: 0 8px 8px 0;
+      }
+      .range-selector-control-btn {
+        color: rgba(0,0,0,0.65);
+        cursor: pointer;
+        position: relative;
+        padding: .8em 0;
+        text-align: center;
+        &:after {
+          content: '';
+          position: absolute;
+          height: 3px;
+          width: 0;
+          background: ${colors.primary};
+          transition: width .2s, left .2s;
+          bottom: 0;
+          left: 50%;
         }
-        &:not(:last-child) {
-          border-right: 1px solid rgba(0, 0, 0, 0.15);
+        &:hover {
+          &:after {
+            width: 100%;
+            left: 0;
+          }
         }
-      } */
+      }
     }
   }
 `;
@@ -104,6 +127,7 @@ type Props = {
   rangeCombos: number[];
   rangeTypes: ComboType[];
   activeComboIndex: number;
+  className?: string;
   setComboActive: (index: number) => void;
   setComboInactive: (index: number) => void;
   setSuitComboActive: (index: number) => void;
@@ -127,6 +151,7 @@ const RangeSelector: React.FC<Props> = ({
   setRangeAll,
   clearRange,
   activeComboIndex,
+  className = ""
 }) => {
   const rangeStr = rangeToString(rangeCombos, rangeTypes);
   const comboNames: string[] = rangeCombos.map((_, index) =>
@@ -171,38 +196,15 @@ const RangeSelector: React.FC<Props> = ({
 
   const comboCount = getComboCount(rangeCombos);
   return (
-    <RangeSelectorStyle>
-      <div className="range-selector-top-bar">
-        <Input
-          className="range-selector-top-bar-item"
-          onChange={() => {}}
-          value={""}
-          placeholder={"Select Range"}
-        />
-        <Button
-          className="range-selector-top-bar-item"
-          variant="primary"
-          onClick={() => {}}
-        >
-          Save
-        </Button>
-        <Button
-          className="range-selector-top-bar-item"
-          variant="warning"
-          onClick={() => {}}
-        >
-          Delete
-        </Button>
-      </div>
+    <RangeSelectorStyle className={className}>
       <Matrix
         elements={comboNames}
         states={comboStates}
         selectElement={setComboActive}
         deselectElement={setComboInactive}
-        width={"624px"}
-        height={"624px"}
         rows={13}
         cols={13}
+        className="range-selector-matrix"
       />
       <div className="range-selector-bottom-bar">
         <div className="range-selector-controls">
@@ -214,18 +216,18 @@ const RangeSelector: React.FC<Props> = ({
             </span>
           </div>
           <div className="range-selector-controls-buttons">
-            <Button variant="default" onClick={setRangeAll}>
+            <div className="range-selector-control-btn" onClick={setRangeAll}>
               All
-            </Button>
-            <Button variant="default" onClick={setRangePairs}>
+            </div>
+            <div className="range-selector-control-btn" onClick={setRangePairs}>
               Pairs
-            </Button>
-            <Button variant="default" onClick={setRangeBroadway}>
+            </div>
+            <div className="range-selector-control-btn" onClick={setRangeBroadway}>
               Broadway
-            </Button>
-            <Button variant="warning" onClick={clearRange}>
+            </div>
+            <div className="range-selector-control-btn range-selector-clear-btn" onClick={clearRange}>
               Clear
-            </Button>
+            </div>
           </div>
           <TextArea
             rows={4}
@@ -242,8 +244,6 @@ const RangeSelector: React.FC<Props> = ({
           deselectElement={setSuitComboInactive}
           elements={suitCombos}
           states={suitStates}
-          width="236px"
-          height="200px"
           rows={4}
           cols={4}
         />

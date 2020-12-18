@@ -4,21 +4,21 @@ import { colors } from "../styles";
 
 type ButtonProps = {
   // 'default', 'primary', 'error', 'warning'
-  variant: "default" | "primary" | "warning";
+  variant?: "default" | "primary" | "warning";
   className?: string;
+  icon?: any;
   onClick: (...args: any[]) => any;
 };
 
 const ButtonStyle = styled.button<{ variant: string }>`
-  height: 42px;
   text-align: center;
-  font-size: 14px;
-  font-family: "SF UI Text Regular";
+  font-size: 0.9em;
+  font-family: 'Roboto', 'sans-serif';
   outline: none;
   border: none;
   cursor: pointer;
-  padding: 0 24px;
-  border-radius: 8px;
+  padding: .8em 1em;
+  border-radius: 2px;
   background: ${(props) => {
     switch (props.variant) {
       case "primary":
@@ -35,20 +35,25 @@ const ButtonStyle = styled.button<{ variant: string }>`
       case "warning":
         return "#fff";
       default:
-        return "rgba(0,0,0,0.85)";
+        return "rgba(0,0,0,0.65)";
     }
   }};
+  > svg {
+    margin-left: .8em;
+  }
 `;
 
 const Button: React.FC<ButtonProps> = ({
-  variant,
+  variant = "default",
   children,
   className = "",
+  icon = null,
   onClick,
 }) => {
   return (
     <ButtonStyle onClick={onClick} className={className} variant={variant}>
       {children}
+      {icon}
     </ButtonStyle>
   );
 };

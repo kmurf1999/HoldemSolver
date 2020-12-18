@@ -19,13 +19,14 @@ const TextAreaStyle = styled.textarea<{
 }>`
   width: 100%;
   resize: none;
-  border-radius: 8px;
+  border-radius: 2px;
   box-sizing: border-box;
   border: 0;
   outline: 0;
   padding: 16px;
-  font-family: "SF UI Text Regular";
-  font-size: 14px;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+  font-family: 'Open Sans', 'sans-serif';
+  font-size: inherit;
   color: rgba(0, 0, 0, 0.85);
   &::placeholder {
     color: rgba(0, 0, 0, 0.65);
