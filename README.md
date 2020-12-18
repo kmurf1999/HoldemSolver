@@ -2,6 +2,14 @@
 
 Holdem Solver is an free to use, open source web-application similar to FlopZilla or Equilab with future plans to integrate a cloud-based poker solver.
 
+## Features
+
+![UI so far](/screenshots/1.png?raw=true "UI So Far")
+
+- Easy to use interface
+- Ability to save range vs range analysis
+- Free to use
+
 ## **Built With**
 
 - [React.js][1]
@@ -14,7 +22,7 @@ Holdem Solver is an free to use, open source web-application similar to FlopZill
 [3]: https://www.rust-lang.org/
 [4]: https://graphql.org/
 
-# Getting Started
+## Getting Started
 
 1. Clone the repository
 
@@ -24,7 +32,13 @@ Holdem Solver is an free to use, open source web-application similar to FlopZill
 
 `docker-compose up -f docker-compose.dev.yml up`
 
-# License
+## Progress
+
+Currently working on completing UI and dockerizing the application.
+
+Contribution is welcome and appreciated.
+
+## License
 
 This project is MIT Licensed
 
