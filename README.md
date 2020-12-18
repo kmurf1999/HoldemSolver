@@ -2,9 +2,9 @@
 
 Holdem Solver is an free to use, open source web-application similar to FlopZilla or Equilab with future plans to integrate a cloud-based poker solver.
 
-#### Built with
+**Built With**
 
-- [React.js][1]]
+- [React.js][1]
 - [Typescript][2]
 - [Rust][3]
 - [Graphql][4]
