@@ -11,6 +11,7 @@ coverage/
 # production
 build/
 target/
+data/
 
 # misc
 .DS_Store
