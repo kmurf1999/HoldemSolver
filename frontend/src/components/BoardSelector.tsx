@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
+import { shadow } from '../styles';
 
 import { AiOutlinePlus } from 'react-icons/ai';
 
 const BoardSelectorStyle = styled.div`
   .board-selector {
     background: #fff;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: ${shadow[0]};
     padding: 1em;
     width: min-content;
     float: right;

@@ -6,6 +6,11 @@ export const colors = {
   info: '#B5D99C',
 };
 
+export const shadow = [
+  '0px 4px 12px rgba(0,0,0,0.1)',
+  '0px 5px 12px rgba(0, 0, 0, 0.2)'
+];
+
 export function makeOpaque(col: string, opacity: number): string {
   if (col[0] === '#') {
     col = col.slice(1);

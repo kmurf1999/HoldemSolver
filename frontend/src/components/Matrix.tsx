@@ -1,6 +1,6 @@
 import React, { useState, ReactNode, MouseEvent } from 'react';
 import styled from 'styled-components';
-import { colors } from '../styles';
+import { shadow, colors } from '../styles';
 import { UIState } from '../lib';
 
 type MatrixTileProps = {
@@ -53,11 +53,11 @@ const MatrixTileStyle = styled.div<{ state: UIState; id: string }>`
   }
 
   &:hover {
-    box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: ${shadow[1]};
     z-index: 999;
   }
 
-  box-shadow: ${(props) => (props.state === UIState.UNAVAILABLE ? 'none !important' : '0px 4px 12px rgba(0,0,0,0.1)')};
+  box-shadow: ${(props) => (props.state === UIState.UNAVAILABLE ? 'none !important' : shadow[0])};
 
   overflow: hidden;
   position: relative;

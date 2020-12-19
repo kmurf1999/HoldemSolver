@@ -1,0 +1,49 @@
+version: "3.7"
+services:
+  frontend: # React.js frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend:/app
+      - "/app/node_modules"
+    ports:
+      - 3000:3000
+    stdin_open: true
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./api:/api
+    environment:
+      RUST_LOG: info
+      DATABASE_URL: postgres://mydb:changeme@db:5432/mydb
+      REDIS_URL: redis://cache:6379/
+      JWT_SECRET: ITS A SECRET
+      ARGON_SECRET: ITS ANOTHER SECRET
+    ports:
+      - 3535:3535
+    depends_on:
+      - db
+      - cache
+    restart: always
+
+  db: # postgresql database
+    image: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    restart: always
+
+  cache:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    restart: always

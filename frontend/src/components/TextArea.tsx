@@ -1,5 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import styled from 'styled-components';
+import { shadow } from '../styles';
 
 type TextAreaProps = {
   onChange: (...args: any[]) => void;
@@ -24,7 +25,7 @@ const TextAreaStyle = styled.textarea<{
   border: 0;
   outline: 0;
   padding: 16px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: ${shadow[0]};
   font-family: 'Open Sans', 'sans-serif';
   font-size: inherit;
   color: rgba(0, 0, 0, 0.85);

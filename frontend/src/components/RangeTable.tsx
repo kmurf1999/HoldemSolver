@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { colors } from '../styles';
+import { colors, shadow } from '../styles';
 import { FaTrash } from 'react-icons/fa';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 
@@ -24,7 +24,7 @@ const RangeTableStyle = styled.div<{ className: string }>`
   .range-table-container {
     background: #fff;
     border-radius: 2px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: ${shadow[0]};
   }
   .range-table {
     width: 100%;

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { colors } from '../styles';
+import { colors, shadow } from '../styles';
 
 const MADE_HAND_CATEGORIES = [
   {
@@ -43,7 +43,7 @@ const DRAW_HAND_CATEGORIES = [
 const RangeFilterStyle = styled.div`
   .range-filter-container {
     background: white;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: ${shadow[0]};
     border-radius: 2px;
   }
   .range-filter-table {
