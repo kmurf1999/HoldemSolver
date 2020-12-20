@@ -17,12 +17,14 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - ./api:/api
+    env_file:
+      - ./.env.dev
     environment:
       RUST_LOG: info
-      DATABASE_URL: postgres://mydb:changeme@db:5432/mydb
-      REDIS_URL: redis://cache:6379/
-      JWT_SECRET: ITS A SECRET
-      ARGON_SECRET: ITS ANOTHER SECRET
+      DATABASE_URL: postgres://postgres:postgres@db:5432/postgres
+    #   REDIS_URL: redis://cache:6379/
+    #   JWT_SECRET: ITS A SECRET
+    #   ARGON_SECRET: ITS ANOTHER SECRET
     ports:
       - 3535:3535
     depends_on:
@@ -36,10 +38,13 @@ services:
       - 5432:5432
     volumes:
       - ./data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - ./migrations/up:/docker-entrypoint-initdb.d/
+    env_file:
+      - ./.env.dev
+    # environment:
+    #   - POSTGRES_DB=postgres
+    #   - POSTGRES_USER=postgres
+    #   - POSTGRES_PASSWORD=postgres
     restart: always
 
   cache:
@@ -47,3 +52,9 @@ services:
     ports:
       - 6379:6379
     restart: always
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
