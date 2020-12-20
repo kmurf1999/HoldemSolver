@@ -1,55 +1,32 @@
 import React from 'react';
-import styled from 'styled-components';
-import RangeSelector from './containers/RangeSelector';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 
-import BoardSelector from './components/BoardSelector';
-import RangeTable from './components/RangeTable';
-import RangeFilter from './components/RangeFilter';
-import Footer from './components/Footer';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
-const Layout = styled.div`
-  width: 100%;
-  .main {
-    min-height: 100vh;
-    width: 100%;
-    flex-grow: 1;
-    padding: 1em;
-    overflow-y: auto;
+export default function App(): React.ReactElement {
+  return (
+    <Router>
+      <Switch>
 
-    display: grid;
-    grid-gap: 2vmin;
-    grid-template-columns: minmax(auto, 400px) minmax(300px, 600px) minmax(auto, 400px);
-    grid-template-rows: 12em repeat(2, fit-content(0));
-    grid-template-areas: 'range-table range-selector range-filter' 'board-selector range-selector .';
-    .range-selector {
-      grid-area: range-selector;
-    }
-    .range-table {
-      grid-area: range-table;
-    }
-    .range-filter {
-      grid-area: range-filter;
-    }
-    .board-selector {
-      grid-area: board-selector;
-    }
-  }
-  .footer {
-  }
-`;
+        <Route path="/login">
+          <Login/>
+        </Route>
 
-const App: React.FC = () => (
-  <Layout>
-    <div className="main">
-      <BoardSelector className="board-selector" />
-      <RangeTable className="range-table" />
-      <RangeSelector className="range-selector" />
-      <RangeFilter className="range-filter" />
-    </div>
-    <div className="footer">
-      <Footer />
-    </div>
-  </Layout>
-);
+        <Route path="/register">
+          <Register/>
+        </Route>
 
-export default App;
+        <Route path="/">
+          <Home/>
+        </Route>
+
+      </Switch>
+    </Router>
+  );
+}
