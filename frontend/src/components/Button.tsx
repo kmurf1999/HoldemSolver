@@ -1,24 +1,28 @@
 import React, { ReactElement, MouseEvent } from 'react';
 import styled from 'styled-components';
-import { colors } from '../styles';
+import { shadow, colors } from '../styles';
 
 type ButtonProps = {
   variant?: 'default' | 'primary' | 'warning';
   className?: string;
+  block?: boolean;
   icon?: ReactElement;
-  children: ReactElement;
+  children: ReactElement | string;
   onClick: (e: MouseEvent<HTMLButtonElement>) => void;
 };
 
-const ButtonStyle = styled.button<{ variant: string }>`
+const ButtonStyle = styled.button<{ block: boolean, variant: string }>`
   text-align: center;
-  font-size: 0.9em;
+  font-size: 1em;
   font-family: 'Roboto', 'sans-serif';
   outline: none;
   border: none;
   cursor: pointer;
-  padding: 0.8em 1em;
+  padding: .8em 1.2em;
+  box-shadow: ${shadow[0]};
   border-radius: 2px;
+  width: ${props => props.block ? '100%': 'fit-content'};
+  transition: transform .1s ease;
   background: ${(props) => {
     switch (props.variant) {
       case 'primary':
@@ -26,7 +30,7 @@ const ButtonStyle = styled.button<{ variant: string }>`
       case 'warning':
         return colors.warning;
       default:
-        return '#fff';
+        return '#eee';
     }
   }};
   color: ${(props) => {
@@ -38,15 +42,19 @@ const ButtonStyle = styled.button<{ variant: string }>`
         return 'rgba(0,0,0,0.65)';
     }
   }};
+  &:hover {
+    transform: scale(1.01);
+    box-shadow: ${shadow[1]};
+  }
   > svg {
     margin-left: 0.8em;
   }
 `;
 
 function Button(props: ButtonProps): React.ReactElement {
-  const { variant = 'default', children, className = '', icon = null, onClick } = props;
+  const { block = false, variant = 'default', children, className = '', icon = null, onClick } = props;
   return (
-    <ButtonStyle onClick={onClick} className={className} variant={variant}>
+    <ButtonStyle block={block} onClick={onClick} className={className} variant={variant}>
       {children}
       {icon}
     </ButtonStyle>

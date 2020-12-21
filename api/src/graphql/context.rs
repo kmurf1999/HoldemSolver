@@ -21,7 +21,7 @@ impl Context {
     pub fn session(&self) -> Option<&Session> {
         self.session.as_ref()
     }
-
+    
     pub fn is_authenticated(&self) -> bool {
         self.session.is_some()
     }

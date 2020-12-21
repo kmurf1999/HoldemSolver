@@ -15,24 +15,16 @@ export function makeOpaque(col: string, opacity: number): string {
   if (col[0] === '#') {
     col = col.slice(1);
   }
-
   const num = parseInt(col, 16);
-
   let r = num >> 16;
-
   if (r > 255) r = 255;
   else if (r < 0) r = 0;
-
   let b = (num >> 8) & 0x00ff;
-
   if (b > 255) b = 255;
   else if (b < 0) b = 0;
-
   let g = num & 0x0000ff;
-
   if (g > 255) g = 255;
   else if (g < 0) g = 0;
-
   return `rgba(${r}, ${b}, ${g}, ${opacity})`;
 }
 
@@ -83,5 +75,8 @@ export const GlobalStyle = createGlobalStyle`
       font-weight: 300;
       font-size: inherit;
       color: rgba(0, 0, 0, 0.65);
+  }
+  input, textarea, p {
+    font-family: 'Open Sans', 'sans-serif';
   }
 `;

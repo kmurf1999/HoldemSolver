@@ -23,8 +23,9 @@ pub struct Request {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Claims {
-    session: String,
-    csrf: String,
+    // TODO maybe dont make this public, but it shouldnt matter too much
+    pub session: String,
+    pub csrf: String,
 }
 
 impl Claims {
@@ -63,6 +64,7 @@ pub async fn filter(
     Ok(reply)
 }
 
+// login route
 async fn request(
     env: Environment,
     req: Request,

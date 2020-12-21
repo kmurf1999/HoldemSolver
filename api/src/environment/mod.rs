@@ -12,7 +12,7 @@ pub struct Environment {
     redis: redis::Client,
     argon: Argon,
     jwt: Jwt,
-    session_lifetime: Option<i64>,
+    session_lifetime: Option<i64>
 }
 
 impl Environment {
