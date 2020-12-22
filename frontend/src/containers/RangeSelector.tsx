@@ -201,8 +201,8 @@ function RangeSelector(props: Props): React.ReactElement {
       <Matrix
         elements={comboNames}
         states={comboStates}
-        selectElement={setComboActive}
-        deselectElement={setComboInactive}
+        onSelectElement={setComboActive}
+        onDeselectElement={setComboInactive}
         rows={13}
         cols={13}
         className="range-selector-matrix"
@@ -238,8 +238,8 @@ function RangeSelector(props: Props): React.ReactElement {
         </div>
         <Matrix
           className="range-selector-suit-matrix"
-          selectElement={setSuitComboActive}
-          deselectElement={setSuitComboInactive}
+          onSelectElement={setSuitComboActive}
+          onDeselectElement={setSuitComboInactive}
           elements={suitCombos}
           states={suitStates}
           rows={4}

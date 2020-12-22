@@ -1,4 +1,4 @@
-import React, { useState, ReactNode, MouseEvent } from 'react';
+import React, {useState, ReactNode, MouseEvent, useEffect} from 'react';
 import styled from 'styled-components';
 import { shadow, colors } from '../styles';
 import { UIState } from '../lib';
@@ -10,6 +10,7 @@ type MatrixTileProps = {
 };
 
 const MatrixTileStyle = styled.div<{ state: UIState; id: string }>`
+  touch-action: none;
   background: ${(props) => {
     switch (props.state) {
       case UIState.PARTIAL:
@@ -89,8 +90,8 @@ type MatrixProps = {
   elements: ReactNode[];
   states: UIState[];
   className?: string;
-  selectElement?: (index: number) => void;
-  deselectElement?: (index: number) => void;
+  onSelectElement?: (index: number) => void;
+  onDeselectElement?: (index: number) => void;
 };
 
 const MatrixStyle = styled.div<{
@@ -106,52 +107,55 @@ const MatrixStyle = styled.div<{
 `;
 
 function Matrix(props: MatrixProps): React.ReactElement {
-  const { elements, states, rows, cols, selectElement, deselectElement, className = '' } = props;
-  // used to to show updates
-  const [changed, setChanged] = useState(false);
-  const [mouseDown, setMouseDown] = useState(false);
+  const { elements, states, rows, cols, onSelectElement, onDeselectElement, className = '' } = props;
+  const [changed, setChanged] = useState(false); // used to to show updates
+  const [pointerDown, setPointerDown] = useState(false);
   const [selecting, setSelecting] = useState(false);
-  function onMouseDown(e: MouseEvent<HTMLDivElement>) {
+  const [currentTarget, setCurrentTarget] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    if (currentTarget) {
+      const cb = selecting ? onSelectElement : onDeselectElement;
+      cb && cb(currentTarget);
+      setChanged(currentValue => !currentValue);
+    }
+  }, [selecting, currentTarget, setChanged, onSelectElement, onDeselectElement])
+
+  function getTileFromPointerEvent(e: MouseEvent<HTMLDivElement>): number | undefined {
+    const el = document.elementFromPoint(e.clientX, e.clientY);
+    if (!el) return;
+    const id = el.id;
+    return Number.parseInt(id);
+  }
+  function handlePointerDown(e: MouseEvent<HTMLDivElement>) {
     e.preventDefault();
-    const id = (e.target as HTMLDivElement).id;
-    const tileIndex = Number.parseInt(id);
-    if (Number.isNaN(tileIndex)) return;
+    const tileIndex = getTileFromPointerEvent(e);
+    if (tileIndex === undefined || Number.isNaN(tileIndex)) return;
     const selecting = !states[tileIndex];
-    if (selecting && selectElement) {
-      selectElement(tileIndex);
-    }
-    if (!selecting && deselectElement) {
-      deselectElement(tileIndex);
-    }
-    setChanged(!changed);
-    setMouseDown(true);
+    setPointerDown(true);
     setSelecting(selecting);
+    setCurrentTarget(tileIndex);
   }
-  function onMouseOver(e: MouseEvent<HTMLDivElement>) {
+  function handlePointerMove(e: MouseEvent<HTMLDivElement>) {
     e.preventDefault();
-    const id = (e.target as HTMLDivElement).id;
-    const tileIndex = Number.parseInt(id);
-    if (Number.isNaN(tileIndex)) return;
-    if (mouseDown) {
-      if (selecting && selectElement) {
-        selectElement(tileIndex);
-      }
-      if (!selecting && deselectElement) {
-        deselectElement(tileIndex);
-      }
-      setChanged(!changed);
+    if (pointerDown) {
+      const tileIndex = getTileFromPointerEvent(e);
+      if (tileIndex === undefined || Number.isNaN(tileIndex)) return;
+      setCurrentTarget(tileIndex);
     }
   }
-  function onMouseUp(e: MouseEvent<HTMLDivElement>) {
+  function handlePointerUp(e: MouseEvent<HTMLDivElement>) {
     e.preventDefault();
-    setMouseDown(false);
+    setPointerDown(false);
+    setCurrentTarget(undefined);
   }
   return (
     <MatrixStyle
       className={className}
-      onMouseDown={onMouseDown}
-      onMouseUp={onMouseUp}
-      onMouseOver={onMouseOver}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerLeave={handlePointerUp}
       rows={rows}
       cols={cols}
     >
