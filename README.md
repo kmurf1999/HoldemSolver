@@ -37,7 +37,7 @@ Holdem Solver is an free to use, open source web-application similar to FlopZill
 
 3. Start the development server
 
-`docker-compose -f docker.compose.dev.yml up`
+`docker-compose -f docker-compose.dev.yml up`
 
 ## Progress
 
