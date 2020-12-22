@@ -33,8 +33,7 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0;
     margin: 0;
     font-weight: normal;
-  }
-  div, span {
+    font-family: inherit;
     box-sizing: border-box;
   }
   html, body, #root {

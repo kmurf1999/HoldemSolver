@@ -16,6 +16,7 @@ impl Session {
     pub async fn new(env: Environment, jwt: &str, csrf: &str) -> anyhow::Result<Self> {
         let session_key = auth::claims(&env, &jwt, &csrf)?.session();
         let mut redis = env.redis().await?;
+        println!("{} {}", jwt, csrf);
         // Fetch session from cache if exists otherwise create
         let auth = cache::get_or_create(&mut redis, session_key, || async {
             let auth = auth::session(env.clone(), &jwt, &csrf).await?;

@@ -20,6 +20,8 @@ pub enum AuthError {
     InvalidCredentials,
     #[error("could not hash password")]
     ArgonError,
+    #[error("This email is already in use")]
+    DuplicateEmail
 }
 
 
@@ -34,7 +36,9 @@ impl AuthMutation {
         let password = argon.hasher().with_password(password).hash()?;
         let id = Uuid::new_v4();
 
-        crate::sql::account::create_account(ctx.database(), id, &email, &password).await?;
+        crate::sql::account::create_account(ctx.database(), id, &email, &password)
+            .await
+            .or(Err(AuthError::DuplicateEmail))?;
 
         let account = crate::sql::account::get_account(ctx.database(), &email).await?;
         
