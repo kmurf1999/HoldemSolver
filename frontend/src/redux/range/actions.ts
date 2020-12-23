@@ -1,8 +1,7 @@
 import {
   RangeActionTypes,
   CLEAR_RANGE,
-  SET_COMBO_ACTIVE,
-  SET_COMBO_INACTIVE,
+  SET_COMBO,
   SET_SUIT_COMBO_ACTIVE,
   SET_SUIT_COMBO_INACTIVE,
   SET_RANGE_ALL,
@@ -44,19 +43,11 @@ export function setRangeAll(): RangeActionTypes {
   };
 }
 
-export function setComboActive(comboIndex: number): RangeActionTypes {
+export function setCombo(comboIndex: number, active: boolean): RangeActionTypes {
   return {
-    type: SET_COMBO_ACTIVE,
+    type: SET_COMBO,
     payload: {
-      comboIndex,
-    },
-  };
-}
-
-export function setComboInactive(comboIndex: number): RangeActionTypes {
-  return {
-    type: SET_COMBO_INACTIVE,
-    payload: {
+      active,
       comboIndex,
     },
   };

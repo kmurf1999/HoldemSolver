@@ -80,9 +80,16 @@ const rangeReducer = (state = defaultState, action: RangeActionTypes): RangeStat
       }
       return { ...state, combos };
     }
-
-    case SET_COMBO_ACTIVE: {
-      const { comboIndex } = action.payload;
+    case SET_COMBO: {
+      const { comboIndex, active } = action.payload;
+      if (!active) {
+        return update(state, {
+          combos: {
+            [comboIndex]: { $set: 0 },
+            activeComboIndex: { $set: comboIndex }
+          }
+        });
+      }
       let newCombo;
       switch (state.types[comboIndex]) {
         case ComboType.OFFSUITED:
@@ -98,15 +105,6 @@ const rangeReducer = (state = defaultState, action: RangeActionTypes): RangeStat
       return update(state, {
         combos: {
           [comboIndex]: { $set: newCombo },
-        },
-        activeComboIndex: { $set: comboIndex },
-      });
-    }
-    case SET_COMBO_INACTIVE: {
-      const { comboIndex } = action.payload;
-      return update(state, {
-        combos: {
-          [comboIndex]: { $set: 0 },
         },
         activeComboIndex: { $set: comboIndex },
       });

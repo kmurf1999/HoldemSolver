@@ -1,14 +1,7 @@
-use crate::graphql::{mutation::Mutation, Context};
+use crate::graphql::Context;
 use crate::{auth, model};
 use juniper::FieldResult;
 use uuid::Uuid;
-
-#[juniper::graphql_object(Context = Context)]
-impl Mutation {
-    fn account() -> AccountMutation {
-        AccountMutation
-    }
-}
 
 #[derive(juniper::GraphQLInputObject, Debug)]
 pub struct CreateAccountInput {
