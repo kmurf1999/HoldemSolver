@@ -11,7 +11,7 @@ export const PAIR_MASK = 0b0000100011001110;
 export const SUITED_MASK = 0b1000010000100001;
 export const OFFSUITED_MASK = 0b0111101111011110;
 
-function charToSuit(c: string): number | null {
+export function charToSuit(c: string): number | undefined {
   switch (c.toLowerCase()) {
     case 's':
       return 0;
@@ -22,11 +22,11 @@ function charToSuit(c: string): number | null {
     case 'd':
       return 3;
     default:
-      return null;
+      return;
   }
 }
 
-function charToRank(c: string): number {
+export function charToRank(c: string): number {
   switch (c) {
     case 'A':
       return 12;
@@ -52,12 +52,21 @@ export enum ComboType {
 /**
  * HandRanges are stored as a 13 * 13 (169) length array of 16 bit integers
  */
-type HandRange = {
+export type HandRange = {
   types: ComboType[];
   combos: number[];
 };
 
-function addSuitCombo(combos: number[], rank1: number, rank2: number, suit1: number, suit2: number) {
+/**
+ * Add a specific suit combo to add range
+ * 
+ * @param combos combo array to add to
+ * @param rank1 rank of first card
+ * @param rank2 rank of second card
+ * @param suit1 suit of first card
+ * @param suit2 suit of second card
+ */
+export function addSuitCombo(combos: number[], rank1: number, rank2: number, suit1: number, suit2: number) {
   let comboIndex: number;
   let suitIndex: number;
   if (suit1 === suit2) {
@@ -73,7 +82,15 @@ function addSuitCombo(combos: number[], rank1: number, rank2: number, suit1: num
   combos[comboIndex] |= 1 << suitIndex;
 }
 
-function addCombo(combos: number[], rank1: number, rank2: number, type: string, plus: boolean) {
+/**
+ * 
+ * @param combos range to add a combo to
+ * @param rank1 first rank
+ * @param rank2 second rank
+ * @param type 's' is suited 'o' is offsuited
+ * @param plus if true, add all > combos (e.g. 22+)
+ */
+export function addCombo(combos: number[], rank1: number, rank2: number, type: string, plus: boolean) {
   switch (type) {
     case 'o': {
       const index = (12 - rank2) * 13 + (12 - rank1);
@@ -126,8 +143,9 @@ export function stringToRange(rangeStr: string): number[] {
       const rank2 = charToRank(components[8]);
       const suit1 = charToSuit(components[7]);
       const suit2 = charToSuit(components[9]);
-      if (suit1 === null || suit2 === null) return;
-      addSuitCombo(combos, rank1, rank2, suit1, suit2);
+      if (typeof suit1 !== undefined || typeof suit2 !== undefined) {
+        addSuitCombo(combos, rank1, rank2, suit1 as number, suit2 as number);
+      }
     }
   });
   return combos;
@@ -166,6 +184,11 @@ export function getComboName(comboIndex: number): string {
   }
 }
 
+/**
+ * Count the number of 1s in a number
+ * 
+ * @param n integer
+ */
 export function bitCount(n: number): number {
   n = n - ((n >> 1) & 0x55555555);
   n = (n & 0x33333333) + ((n >> 2) & 0x33333333);
@@ -399,12 +422,10 @@ export function getSuitComboElement(comboIndex: number, suitIndex: number): Reac
         SUIT_TO_CHAR[firstSuit],
       ),
     );
-
-    // return `${RANK_TO_CHAR[secondRank]}${SUIT_TO_CHAR[secondSuit]}${RANK_TO_CHAR[firstRank]}${SUIT_TO_CHAR[firstSuit]}`;
   }
 }
 
-export function getSuitComboState(type: ComboType, combo: number, suitIndex: number): UIState {
+export function getSuitComboState(type: ComboType, comboMask: number, suitIndex: number): UIState {
   const suitIndexShifted = 1 << suitIndex;
   switch (type) {
     case ComboType.OFFSUITED:
@@ -417,7 +438,7 @@ export function getSuitComboState(type: ComboType, combo: number, suitIndex: num
       if ((suitIndexShifted & PAIR_MASK) === 0) return UIState.UNAVAILABLE;
       break;
   }
-  if (combo & suitIndexShifted) {
+  if (comboMask & suitIndexShifted) {
     return UIState.ACTIVE;
   } else {
     return UIState.INACTIVE;

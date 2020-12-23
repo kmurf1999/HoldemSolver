@@ -95,8 +95,8 @@ export default function Register(): React.ReactElement {
               localStorage.setItem('jwt', jwt);
               localStorage.setItem('csrf', csrf);
           },
-          onError(err) {
-              setError(err.message);
+          onError({ message }) {
+              setError(message);
           }
       });
 
@@ -120,7 +120,7 @@ export default function Register(): React.ReactElement {
         // client side validation
         setFieldErrors({ ...fieldErrors, passwordAgain: validators['passwordAgain'](value, password) });
     }
-    function onClick(e: MouseEvent<HTMLButtonElement>) {
+    function onSubmit(e: MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
         setError('');
         setFieldErrors({ ...fieldErrors, email: validators['email'](email) });
@@ -138,7 +138,7 @@ export default function Register(): React.ReactElement {
                 <Input className="register-field" error={fieldErrors.email} label="Email" name="email" onChange={onEmailChange} value={email}/>
                 <Input className="register-field" error={fieldErrors.password} type="password" label="Password" name="password" onChange={onPasswordChange} value={password}/>
                 <Input className="register-field" error={fieldErrors.passwordAgain} type="password" label="Repeat Password" name="password_again" onChange={onPasswordAgainChange} value={passwordAgain}/>
-                <Button isLoading={loading} onClick={onClick} type="submit" className="register-btn" block variant="primary">Register</Button>
+                <Button isLoading={loading} onClick={onSubmit} type="submit" className="register-btn" block variant="primary">Register</Button>
                 <p>Already have an account? <Link to="/login">Login</Link></p>
             </form>
         </RegisterStyle>

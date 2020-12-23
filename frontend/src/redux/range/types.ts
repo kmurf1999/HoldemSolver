@@ -1,11 +1,17 @@
+// remove all
 export const CLEAR_RANGE = 'CLEAR_RANGE';
-export const SET_COMBO_ACTIVE = 'SET_COMBO_ACTIVE';
-export const SET_COMBO_INACTIVE = 'SET_COMBO_INACTIVE';
+export const SET_COMBO = 'SET_COMBO';
+// set specific suit active
 export const SET_SUIT_COMBO_ACTIVE = 'SET_SUIT_COMBO_ACTIVE';
+// set specific suit invactive
 export const SET_SUIT_COMBO_INACTIVE = 'SET_SUIT_COMBO_INACTIVE';
+// set range to all
 export const SET_RANGE_ALL = 'SET_RANGE_ALL';
+// set all broadway
 export const SET_RANGE_BROADWAY = 'SET_RANGE_BROADWAY';
+// set all pairs
 export const SET_RANGE_PAIRS = 'SET_RANGE_PAIRS';
+// set range using text
 export const SET_RANGE_TEXT = 'SET_RANGE_TEXT';
 
 export enum ComboType {
@@ -45,15 +51,9 @@ interface clearRangeAction {
 }
 
 interface setComboActiveAction {
-  type: typeof SET_COMBO_ACTIVE;
+  type: typeof SET_COMBO
   payload: {
-    comboIndex: number;
-  };
-}
-
-interface setComboInactiveAction {
-  type: typeof SET_COMBO_INACTIVE;
-  payload: {
+    active: boolean;
     comboIndex: number;
   };
 }
