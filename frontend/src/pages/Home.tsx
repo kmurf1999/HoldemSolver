@@ -18,9 +18,8 @@ const Layout = styled.div`
 
     display: grid;
     grid-gap: 2vmin;
-    grid-template-columns: minmax(auto, 400px) minmax(300px, 600px) minmax(auto, 400px);
-    grid-template-rows: 12em repeat(2, fit-content(0));
-    grid-template-areas: 'range-table range-selector range-filter' 'board-selector range-selector .';
+    grid-template-areas: 'range-table' 'range-selector' 'range-filter' 'board-selector';
+    
     .range-selector {
       grid-area: range-selector;
     }
@@ -32,6 +31,27 @@ const Layout = styled.div`
     }
     .board-selector {
       grid-area: board-selector;
+    }
+  }
+  @media only screen and (min-width: 500px) {
+    .main {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-areas: 'range-table board-selector' 'range-selector range-selector' 'range-filter range-filter';
+      grid-template-rows: auto repeat(3, fit-content(0));
+    }
+  }
+  @media only screen and (min-width: 800px) {
+    .main {
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-areas: 'range-table range-selector range-selector' 'board-selector range-selector range-selector' '. range-filter range-filter';
+      grid-template-rows: 12em repeat(3, fit-content(0));
+    }
+  }
+  @media only screen and (min-width: 1260px) {
+    .main {
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-areas: 'range-table range-selector range-selector range-filter' 'board-selector range-selector range-selector range-filter';
+      grid-template-rows: repeat(2, fit-content(0));
     }
   }
   .footer {

@@ -1,20 +1,22 @@
 import {
   RangeActionTypes,
   CLEAR_RANGE,
-  SET_COMBO,
+  SET_COMBO_ACTIVE,
+  SET_COMBO_INACTIVE,
   SET_SUIT_COMBO_ACTIVE,
   SET_SUIT_COMBO_INACTIVE,
   SET_RANGE_ALL,
   SET_RANGE_BROADWAY,
   SET_RANGE_PAIRS,
-  SET_RANGE_TEXT,
+  SET_RANGE,
 } from './types';
+import HandRange from './HandRange';
 
-export function setRangeText(rangeString: string): RangeActionTypes {
+export function setRange(handRange: HandRange): RangeActionTypes {
   return {
-    type: SET_RANGE_TEXT,
+    type: SET_RANGE,
     payload: {
-      rangeString,
+      handRange,
     },
   };
 }
@@ -43,11 +45,19 @@ export function setRangeAll(): RangeActionTypes {
   };
 }
 
-export function setCombo(comboIndex: number, active: boolean): RangeActionTypes {
+export function setComboActive(comboIndex: number): RangeActionTypes {
   return {
-    type: SET_COMBO,
+    type: SET_COMBO_ACTIVE,
     payload: {
-      active,
+      comboIndex,
+    },
+  };
+}
+
+export function setComboInactive(comboIndex: number): RangeActionTypes {
+  return {
+    type: SET_COMBO_INACTIVE,
+    payload: {
       comboIndex,
     },
   };

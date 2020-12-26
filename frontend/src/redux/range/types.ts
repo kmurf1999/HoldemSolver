@@ -1,6 +1,8 @@
+import HandRange from './HandRange';
 // remove all
 export const CLEAR_RANGE = 'CLEAR_RANGE';
-export const SET_COMBO = 'SET_COMBO';
+export const SET_COMBO_ACTIVE = 'SET_COMBO_ACTIVE';
+export const SET_COMBO_INACTIVE = 'SET_COMBO_INACTIVE';
 // set specific suit active
 export const SET_SUIT_COMBO_ACTIVE = 'SET_SUIT_COMBO_ACTIVE';
 // set specific suit invactive
@@ -11,28 +13,35 @@ export const SET_RANGE_ALL = 'SET_RANGE_ALL';
 export const SET_RANGE_BROADWAY = 'SET_RANGE_BROADWAY';
 // set all pairs
 export const SET_RANGE_PAIRS = 'SET_RANGE_PAIRS';
-// set range using text
-export const SET_RANGE_TEXT = 'SET_RANGE_TEXT';
+// set range directly
+export const SET_RANGE = 'SET_RANGE';
 
-export enum ComboType {
-  PAIR = 0,
-  SUITED,
-  OFFSUITED,
+export type RangeState = {
+  handRange: HandRange;
+  activeCombo: number; // 0 -> 169
 }
 
-export enum ComboState {
-  INACTIVE = 0,
-  ACTIVE,
-  PARTIAL,
-  UNAVAILABLE,
-}
-
-interface setRangeTextAction {
-  type: typeof SET_RANGE_TEXT;
+interface setRangeAction {
+  type: typeof SET_RANGE;
   payload: {
-    rangeString: string;
+    handRange: HandRange;
   };
 }
+
+interface setComboActiveAction {
+  type: typeof SET_COMBO_ACTIVE;
+  payload: {
+    comboIndex: number
+  }
+}
+
+interface setComboInactiveAction {
+  type: typeof SET_COMBO_INACTIVE;
+  payload: {
+    comboIndex: number
+  }
+}
+
 
 interface setRangePairsAction {
   type: typeof SET_RANGE_PAIRS;
@@ -48,14 +57,6 @@ interface setRangeAllAction {
 
 interface clearRangeAction {
   type: typeof CLEAR_RANGE;
-}
-
-interface setComboActiveAction {
-  type: typeof SET_COMBO
-  payload: {
-    active: boolean;
-    comboIndex: number;
-  };
 }
 
 interface setSuitComboActiveAction {
@@ -81,4 +82,4 @@ export type RangeActionTypes =
   | setRangeAllAction
   | setRangeBroadwayAction
   | setRangePairsAction
-  | setRangeTextAction;
+  | setRangeAction;

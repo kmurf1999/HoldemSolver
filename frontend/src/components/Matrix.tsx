@@ -114,7 +114,7 @@ function Matrix(props: MatrixProps): React.ReactElement {
   const [currentTarget, setCurrentTarget] = useState<number | undefined>(undefined);
 
   useEffect(() => {
-    if (currentTarget) {
+    if (currentTarget !== undefined) {
       const cb = selecting ? onSelectElement : onDeselectElement;
       cb && cb(currentTarget);
       setChanged(currentValue => !currentValue);

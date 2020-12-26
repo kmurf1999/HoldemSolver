@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { SUIT_TO_CHAR, RANK_TO_CHAR, getSuitColor } from './HandRange';
+import { SUIT_TO_CHAR, RANK_TO_CHAR, suitColor } from './redux/range/HandRange';
 // board is represented using 52 bit integer
 // 13 * suit + rank
 
@@ -9,7 +9,7 @@ export function getCardElement(index: number): ReactNode {
   //   return `${RANK_TO_CHAR[rank]}${SUIT_TO_CHAR[suit]}`;
   return React.createElement(
     'span',
-    { style: { color: getSuitColor(suit) } },
+    { style: { color: suitColor(suit) } },
 
     RANK_TO_CHAR[rank],
     React.createElement(
