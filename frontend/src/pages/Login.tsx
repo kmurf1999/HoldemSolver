@@ -1,59 +1,101 @@
 import React, { ChangeEvent, MouseEvent, useState } from 'react';
+import { useHistory, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { gql, useMutation } from '@apollo/client';
-import { shadow } from '../styles';
+import { shadow, colors } from '../styles';
 
 import Button from '../components/Button';
 import Input from '../components/Input';
 
-// export const REGISTER = gql`
-//   mutation accounts {
-//       
-//   }
-// `;
-
+const LOGIN = gql`
+  mutation AuthMutation($email: String!, $password: String!) {
+    auth {
+        login(input: { email: $email, password: $password }) {
+            jwt,
+            csrf
+        }
+    }
+  }
+`;
 
 const LoginStyle = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     .login-container {
         width: 400px;
         background: #fff;
+        border-radius: 2px;
         margin: auto;
         box-shadow: ${shadow[0]};
         display: flex;
         flex-direction: column;
         padding: 3em;
+        position: relative;
+        .login-error {
+            color: ${colors.warning};
+            height: 1em;
+            line-height: 1em;
+        }
         > h1 {
             color: rgba(0, 0, 0, 0.85);
-            margin-bottom: 1.5em;
+            margin-bottom: .5em !important;
         }
-        .login-field {
-            margin-bottom: 2em;
+        > *:not(:last-child) {
+            margin-bottom: 1.5em;
         }
     }
 `;
 
 export default function Login(): React.ReactElement {
+    let history = useHistory();
+    const [error, setError] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [
+        login,
+        { loading }
+      ] = useMutation(LOGIN, {
+          onCompleted(res) {
+              const { jwt, csrf } = res.auth.login;
+              // set auth keys
+              localStorage.setItem('jwt', jwt);
+              localStorage.setItem('csrf', csrf);
+              // push to home
+              history.push('/home');
+          },
+          onError({ message }) {
+              setError(message);
+          }
+      });
+
     function onEmailChange(e: ChangeEvent<HTMLInputElement>) {
         const value = (e.target as HTMLInputElement).value;
         setEmail(value);
     }
     function onPasswordChange(e: ChangeEvent<HTMLInputElement>) {
+        e.preventDefault();
         const value = (e.target as HTMLInputElement).value;
         setPassword(value);
     }
-    function onClick(e: MouseEvent<HTMLButtonElement>) {
+    function onSubmit(e: MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
+        setError('');
+        if (email && password)
+            login({ variables: { email, password }});
     }
     return (
         <LoginStyle>
-            <div className="login-container">
-                <h1>Please Login</h1>
-                <Input className="login-field" type="email" label="Email" name="email" onChange={onEmailChange} value={email}/>
+            <form className="login-container">
+                <h1>Login</h1>
+                <p className="login-error">{error}</p>
+                <Input className="login-field" label="Email" name="email" onChange={onEmailChange} value={email}/>
                 <Input className="login-field" type="password" label="Password" name="password" onChange={onPasswordChange} value={password}/>
-                <Button onClick={onClick} className="login-btn" block variant="primary" >LOGIN</Button>
-            </div>
+                <Button isLoading={loading} onClick={onSubmit} type="submit" className="login-btn" block variant="primary">Login</Button>
+                <p>Don't have an account? <Link to="/register">Sign up</Link></p>
+            </form>
         </LoginStyle>
     );
 }

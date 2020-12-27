@@ -1,5 +1,5 @@
 import React, { ChangeEvent, MouseEvent, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { gql, useMutation } from '@apollo/client';
 import { shadow, colors } from '../styles';
@@ -29,6 +29,7 @@ const RegisterStyle = styled.div`
         background: #fff;
         margin: auto;
         box-shadow: ${shadow[0]};
+        border-radius: 2px;
         display: flex;
         flex-direction: column;
         padding: 3em;
@@ -78,6 +79,7 @@ const validators = {
 };
 
 export default function Register(): React.ReactElement {
+    let history = useHistory();
     const [error, setError] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -94,6 +96,7 @@ export default function Register(): React.ReactElement {
               // set auth keys
               localStorage.setItem('jwt', jwt);
               localStorage.setItem('csrf', csrf);
+              history.push('/home');
           },
           onError({ message }) {
               setError(message);

@@ -58,18 +58,20 @@ const Layout = styled.div`
   }
 `;
 
-const Home: React.FC = () => (
-  <Layout>
-    <div className="main">
-      <BoardSelector className="board-selector" />
-      <RangeTable className="range-table" />
-      <RangeSelector className="range-selector" />
-      <RangeFilter className="range-filter" />
-    </div>
-    <div className="footer">
-      <Footer />
-    </div>
-  </Layout>
-);
+function Home(): React.ReactElement {
+    return (
+      <Layout>
+        <div className="main">
+          <BoardSelector className="board-selector" />
+          <RangeTable className="range-table" />
+          <RangeSelector className="range-selector" />
+          <RangeFilter className="range-filter" />
+        </div>
+        <div className="footer">
+          <Footer />
+        </div>
+      </Layout>
+    );
+}
 
 export default Home;

@@ -1,9 +1,9 @@
 use crate::graphql::Context;
 use crate::{auth, model};
+use chrono::{Duration, Utc};
+use juniper::FieldResult;
 use rand::{distributions::Alphanumeric, Rng};
 use thiserror::Error;
-use juniper::FieldResult;
-use chrono::{Duration, Utc};
 // use std::net::SocketAddr;
 use uuid::Uuid;
 
@@ -21,9 +21,8 @@ pub enum AuthError {
     #[error("could not hash password")]
     ArgonError,
     #[error("This email is already in use")]
-    DuplicateEmail
+    DuplicateEmail,
 }
-
 
 pub struct AuthMutation;
 
@@ -41,13 +40,11 @@ impl AuthMutation {
             .or(Err(AuthError::DuplicateEmail))?;
 
         let account = crate::sql::account::get_account(ctx.database(), &email).await?;
-        
         let identity = model::session::Identity {
             fingerprint: None,
             // TODO actually get remote IP
-            ip: None
+            ip: None,
         };
-        
         let claims = auth::Claims {
             session: rand::thread_rng()
                 .sample_iter(&Alphanumeric)
@@ -58,11 +55,9 @@ impl AuthMutation {
                 .take(64)
                 .collect(),
         };
-        
         let csrf = claims.csrf.clone();
         // TODO make request lifetime a custom field
         let expiry = Utc::now() + Duration::seconds(ctx.session_lifetime(Some(1000000)));
-    
         crate::sql::account::create_session(
             ctx.database(),
             &claims.session,
@@ -72,13 +67,9 @@ impl AuthMutation {
             expiry,
         )
         .await?;
-        
         let jwt = ctx.jwt().encode(claims, expiry)?;
-        
-        Ok(model::Auth {
-            jwt,
-            csrf
-        })
+
+        Ok(model::Auth { jwt, csrf })
     }
     async fn login(ctx: &Context, input: AuthInput) -> FieldResult<model::Auth> {
         let AuthInput { email, password } = input;
@@ -98,13 +89,12 @@ impl AuthMutation {
         if !is_valid {
             return Err(AuthError::InvalidCredentials.into());
         }
-        
+
         let identity = model::session::Identity {
             fingerprint: None,
             // TODO actually get remote IP
-            ip: None
+            ip: None,
         };
-        
         let claims = auth::Claims {
             session: rand::thread_rng()
                 .sample_iter(&Alphanumeric)
@@ -115,11 +105,10 @@ impl AuthMutation {
                 .take(64)
                 .collect(),
         };
-        
         let csrf = claims.csrf.clone();
-        // TODO make request lifetime a custom field
+
+        // TODO make session lifetime a custom field
         let expiry = Utc::now() + Duration::seconds(ctx.session_lifetime(Some(1000000)));
-    
         crate::sql::account::create_session(
             ctx.database(),
             &claims.session,
@@ -129,13 +118,9 @@ impl AuthMutation {
             expiry,
         )
         .await?;
-        
+
         let jwt = ctx.jwt().encode(claims, expiry)?;
-        
-        Ok(model::Auth {
-            jwt,
-            csrf
-        })
+
+        Ok(model::Auth { jwt, csrf })
     }
 }
-

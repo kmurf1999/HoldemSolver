@@ -108,7 +108,7 @@ const MatrixStyle = styled.div<{
 
 function Matrix(props: MatrixProps): React.ReactElement {
   const { elements, states, rows, cols, onSelectElement, onDeselectElement, className = '' } = props;
-  const [changed, setChanged] = useState(false); // used to to show updates
+  // const [changed, setChanged] = useState(false); // used to to show updates
   const [pointerDown, setPointerDown] = useState(false);
   const [selecting, setSelecting] = useState(false);
   const [currentTarget, setCurrentTarget] = useState<number | undefined>(undefined);
@@ -117,9 +117,9 @@ function Matrix(props: MatrixProps): React.ReactElement {
     if (currentTarget !== undefined) {
       const cb = selecting ? onSelectElement : onDeselectElement;
       cb && cb(currentTarget);
-      setChanged(currentValue => !currentValue);
+      // setChanged(currentValue => !currentValue);
     }
-  }, [selecting, currentTarget, setChanged, onSelectElement, onDeselectElement])
+  }, [selecting, currentTarget, onSelectElement, onDeselectElement])
 
   function getTileFromPointerEvent(e: MouseEvent<HTMLDivElement>): number | undefined {
     const el = document.elementFromPoint(e.clientX, e.clientY);
