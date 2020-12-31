@@ -5,7 +5,6 @@ import RangeSelector from '../containers/RangeSelector';
 import BoardSelector from '../components/BoardSelector';
 import RangeTable from '../components/RangeTable';
 import RangeFilter from '../components/RangeFilter';
-import Footer from '../components/Footer';
 
 const Layout = styled.div`
   width: 100%;
@@ -66,9 +65,6 @@ function Home(): React.ReactElement {
           <RangeTable className="range-table" />
           <RangeSelector className="range-selector" />
           <RangeFilter className="range-filter" />
-        </div>
-        <div className="footer">
-          <Footer />
         </div>
       </Layout>
     );

@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { shadow } from '../styles';
 
 import { AiOutlinePlus } from 'react-icons/ai';
 
+import Modal from './Modal';
+
 const BoardSelectorStyle = styled.div`
   .board-selector {
     background: #fff;
+    border-radius: 2px;
     box-shadow: ${shadow[0]};
     padding: 1em;
     width: min-content;
@@ -53,29 +56,42 @@ type BoardSelectorProps = {
   className?: string;
 };
 
-const BoardSelector: React.FC<BoardSelectorProps> = ({ className = '' }) => (
-  <BoardSelectorStyle className={className}>
-    <div className="board-selector">
-      <div className="board-title">BOARD</div>
-      <div className="board-cards">
-        <div className="board-card">
-          <AiOutlinePlus />
-        </div>
-        <div className="board-card">
-          <AiOutlinePlus />
-        </div>
-        <div className="board-card">
-          <AiOutlinePlus />
-        </div>
-        <div className="board-card">
-          <AiOutlinePlus />
-        </div>
-        <div className="board-card">
-          <AiOutlinePlus />
+function BoardSelector(props: BoardSelectorProps): React.ReactElement {
+  const { className = '' } = props;
+  const [modalShown, setModalShown] = useState(false);
+  return (
+    <BoardSelectorStyle className={className}>
+      <Modal
+          title="Set Board"
+          shown={modalShown}
+          closeModal={() => setModalShown(false)}
+      >
+          <div className="card-list">
+              OK
+          </div>
+      </Modal>
+      <div className="board-selector">
+        <div className="board-title">BOARD</div>
+        <div className="board-cards">
+          <div onClick={() => setModalShown(true)} className="board-card">
+            <AiOutlinePlus />
+          </div>
+          <div onClick={() => setModalShown(true)} className="board-card">
+            <AiOutlinePlus />
+          </div>
+          <div onClick={() => setModalShown(true)} className="board-card">
+            <AiOutlinePlus />
+          </div>
+          <div onClick={() => setModalShown(true)} className="board-card">
+            <AiOutlinePlus />
+          </div>
+          <div onClick={() => setModalShown(true)} className="board-card">
+            <AiOutlinePlus />
+          </div>
         </div>
       </div>
-    </div>
-  </BoardSelectorStyle>
-);
+    </BoardSelectorStyle>
+  );
+}
 
 export default BoardSelector;

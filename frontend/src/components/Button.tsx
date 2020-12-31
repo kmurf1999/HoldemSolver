@@ -1,10 +1,11 @@
 import React, { ReactElement, MouseEvent } from 'react';
 import styled from 'styled-components';
 import { shadow, colors } from '../styles';
-import { BeatLoader} from 'react-spinners';
+import { BeatLoader } from 'react-spinners';
 
 type ButtonProps = {
   variant?: 'default' | 'primary' | 'warning';
+  size?: 'md' | 'lg';
   className?: string;
   block?: boolean;
   isLoading?: boolean;
@@ -14,18 +15,33 @@ type ButtonProps = {
   onClick: (e: MouseEvent<HTMLButtonElement>) => void;
 };
 
-const ButtonStyle = styled.button<{ block: boolean, variant: string }>`
+const ButtonStyle = styled.button<{ size: string; block: boolean, variant: string }>`
   text-align: center;
-  font-size: 1.2em;
   font-family: 'Roboto', 'sans-serif';
   outline: none;
   border: none;
   cursor: pointer;
-  padding: .8em 1.2em;
-  box-shadow: ${shadow[0]};
   border-radius: 2px;
-  width: ${props => props.block ? '100%': 'fit-content'};
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  box-shadow: ${shadow[0]};
   transition: transform .1s ease;
+  width: ${props => props.block ? '100%': 'fit-content'};
+  font-size: ${props => {
+      switch(props.size) {
+          case 'lg': return '1.2em';
+          case 'md':
+          default: return 'inherit';
+      }
+  }};
+  padding: ${props => {
+      switch(props.size) {
+          case 'lg': return '.8em 1.2em';
+          case 'md':
+          default: return '.8em 1.2em';
+      }
+  }};
   background: ${(props) => {
     switch (props.variant) {
       case 'primary':
@@ -38,11 +54,11 @@ const ButtonStyle = styled.button<{ block: boolean, variant: string }>`
   }};
   color: ${props => getColor(props.variant)};
   &:hover, &:focus {
-    transform: scale(1.01);
+    transform: translateY(-2px);
     box-shadow: ${shadow[1]};
   }
   > svg {
-    margin-left: 0.8em;
+    margin-right: 0.6em;
   }
 `;
 
@@ -57,15 +73,25 @@ function getColor(variant: string): string {
 }
 
 function Button(props: ButtonProps): React.ReactElement {
-  const { isLoading = false, type = 'button', block = false, variant = 'default', children, className = '', icon = null, onClick } = props;
+  const {
+    size = 'md',
+    isLoading = false,
+    type = 'button',
+    block = false,
+    variant = 'default',
+    children,
+    className = '',
+    icon = null,
+    onClick
+  } = props;
   return (
-    <ButtonStyle type={type} block={block} onClick={onClick} className={className} variant={variant}>
+    <ButtonStyle size={size} type={type} block={block} onClick={onClick} className={className} variant={variant}>
       { isLoading ? 
         <BeatLoader color={getColor(variant)} margin={0} size={12} />
       : (
         <React.Fragment>
-          {children}
           {icon}
+          {children}
         </React.Fragment>
         )
       }

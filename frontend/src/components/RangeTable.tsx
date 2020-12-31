@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { colors, shadow } from '../styles';
-import { FaTrash } from 'react-icons/fa';
-import { AiOutlinePlusCircle } from 'react-icons/ai';
+import { FiX, FiPlusCircle } from 'react-icons/fi';
+
+import Modal from './Modal';
+import Button from './Button';
+import CreateRangeForm from './CreateRangeForm';
 
 const RangeTableStyle = styled.div<{ className: string }>`
   .range-table-controls {
@@ -14,8 +17,12 @@ const RangeTableStyle = styled.div<{ className: string }>`
     }
   }
   .range-table-item-icons {
+    display: flex;
+    align-items: center;
     > svg {
       cursor: pointer;
+      width: 1.4em;
+      height: 1.4em;
       &:hover {
         transform: scale(1.1);
       }
@@ -31,8 +38,7 @@ const RangeTableStyle = styled.div<{ className: string }>`
     .range-table-item {
       border-bottom: 1px solid #eee;
       &:hover {
-        color: #fff;
-        background: ${colors.primary};
+        background: rgba(0, 0, 0, 0.05);
       }
     }
   }
@@ -45,14 +51,16 @@ const RangeTableStyle = styled.div<{ className: string }>`
       display: flex;
       flex-direction: row;
       justify-content: center;
+      align-items: center;
       border-radius: 0 0 2px 2px;
       > svg {
-        margin-left: 0.4em;
+        margin-right: 0.4em;
         width: 1.2em;
         height: 1.2em;
       }
       &:hover {
-        background: #fff;
+        background: ${colors.primary};
+        color: #fff;
         transform: scale(1.02);
         box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.25);
       }
@@ -66,8 +74,21 @@ type RangeTableProps = {
 
 function RangeTable(props: RangeTableProps): React.ReactElement {
   const { className = '' } = props;
+  const [modalShown, setModalShown] = useState(false);
   return (
     <RangeTableStyle className={className}>
+        <Modal
+            title="Add Range"
+            shown={modalShown}
+            closeModal={() => setModalShown(false)}
+            actionButtons={[
+                <Button variant="primary" onClick={() => {}}>
+                    CREATE RANGE
+                </Button>,
+            ]}
+        >
+            <CreateRangeForm/>
+        </Modal>
       <div className="range-table-container">
         <table className="range-table">
           <thead>
@@ -83,7 +104,7 @@ function RangeTable(props: RangeTableProps): React.ReactElement {
               <td>Limp</td>
               <td>32.53%</td>
               <td className="range-table-item-icons">
-                <FaTrash />
+                <FiX/>
               </td>
             </tr>
             <tr className="range-table-item">
@@ -91,15 +112,15 @@ function RangeTable(props: RangeTableProps): React.ReactElement {
               <td>Raise first in</td>
               <td>56.64%</td>
               <td className="range-table-item-icons">
-                <FaTrash />
+                <FiX/>
               </td>
             </tr>
           </tbody>
         </table>
         <div className="range-table-footer">
-          <div className="range-table-add">
-            <div>Create range</div>
-            <AiOutlinePlusCircle />
+            <div onClick={() => setModalShown(true)} className="range-table-add">
+            <FiPlusCircle/>
+            <div>Add Range</div>
           </div>
         </div>
       </div>

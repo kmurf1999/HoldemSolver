@@ -51,11 +51,7 @@ const RangeFilterStyle = styled.div`
     overflow-y: auto;
     .range-filter-table-item {
       &:hover {
-        background: ${colors.primary};
-        color: #fff;
-        .range-filter-select > div {
-          border-color: #fff;
-        }
+        background: rgba(0, 0, 0, 0.05);
       }
     }
     .range-filter-select {

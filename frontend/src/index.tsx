@@ -7,6 +7,13 @@ import { GlobalStyle } from './styles';
 import { ApolloProvider } from '@apollo/client';
 
 import client from './apollo';
+import { login } from './redux/auth/actions';
+
+if (localStorage.getItem('jwt') && localStorage.getItem('csrf')) {
+    const jwt = localStorage.getItem('jwt') as string;
+    const csrf = localStorage.getItem('csrf') as string;
+    store.dispatch(login(jwt, csrf));
+}
 
 ReactDOM.render(
   <React.StrictMode>

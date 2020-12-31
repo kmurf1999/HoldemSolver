@@ -303,14 +303,16 @@ export default class HandRange extends Array<number> {
     rangeArr.push.apply(rangeArr, pairs);
 
     Object.keys(suited).forEach(s => {
-      if (s in offsuited) {
+      const o = s.replace('s', 'o');
+      if (o in offsuited) {
         rangeArr.push(s.replace('s', ''));
       } else {
         rangeArr.push(s);
       }
     });
     Object.keys(offsuited).forEach(o => {
-      if (!(o in suited)) {
+      const s = o.replace('o', 's');
+      if (!(s in suited)) {
         rangeArr.push(o);
       }
     });

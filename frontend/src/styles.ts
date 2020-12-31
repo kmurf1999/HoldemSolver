@@ -1,9 +1,10 @@
 import { createGlobalStyle } from 'styled-components';
 
 export const colors = {
-  primary: '#3764ab',
+  primary: '#2e3e8c',
   warning: '#e08869',
   info: '#B5D99C',
+  background: '#E4E9F1'
 };
 
 export const shadow = [
@@ -36,11 +37,13 @@ export const GlobalStyle = createGlobalStyle`
     font-family: inherit;
     box-sizing: border-box;
   }
-  html, body, #root {
-    height: 100%;
-    background: #E4E9F1;
+  html, body {
+    background: ${colors.background};
     font-size: calc(12px + 2 * ((100vw - 320px) / 880));
     font-family: 'Roboto', 'sans-serif';
+  }
+  main {
+    min-height: 100vh;
   }
   table {
       border-collapse: collapse;

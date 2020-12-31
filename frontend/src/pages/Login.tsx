@@ -1,9 +1,10 @@
 import React, { ChangeEvent, MouseEvent, useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 import { useHistory, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { gql, useMutation } from '@apollo/client';
 import { shadow, colors } from '../styles';
-
+import { login } from '../redux/auth/actions';
 import Button from '../components/Button';
 import Input from '../components/Input';
 
@@ -49,7 +50,19 @@ const LoginStyle = styled.div`
     }
 `;
 
-export default function Login(): React.ReactElement {
+
+const mapDispatchToProps = {
+    login
+};
+
+const connector = connect(null, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type Props = PropsFromRedux;
+
+function Login(props: Props): React.ReactElement {
+    const { login: setCredentials } = props;
     let history = useHistory();
     const [error, setError] = useState('');
     const [email, setEmail] = useState('');
@@ -61,8 +74,7 @@ export default function Login(): React.ReactElement {
           onCompleted(res) {
               const { jwt, csrf } = res.auth.login;
               // set auth keys
-              localStorage.setItem('jwt', jwt);
-              localStorage.setItem('csrf', csrf);
+              setCredentials(jwt, csrf);
               // push to home
               history.push('/home');
           },
@@ -93,9 +105,11 @@ export default function Login(): React.ReactElement {
                 <p className="login-error">{error}</p>
                 <Input className="login-field" label="Email" name="email" onChange={onEmailChange} value={email}/>
                 <Input className="login-field" type="password" label="Password" name="password" onChange={onPasswordChange} value={password}/>
-                <Button isLoading={loading} onClick={onSubmit} type="submit" className="login-btn" block variant="primary">Login</Button>
+                <Button size="lg" isLoading={loading} onClick={onSubmit} type="submit" className="login-btn" block variant="primary">Login</Button>
                 <p>Don't have an account? <Link to="/register">Sign up</Link></p>
             </form>
         </LoginStyle>
     );
 }
+
+export default connector(Login);

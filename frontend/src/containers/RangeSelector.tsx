@@ -28,21 +28,59 @@ import {
 import Matrix from '../components/Matrix';
 import TextArea from '../components/TextArea';
 
+import { FiTrash2, FiSave, FiEdit2 } from 'react-icons/fi';
+import Button from '../components/Button';
+
 const RangeSelectorStyle = styled.div`
   display: flex;
   flex-direction: column;
+  position: relative;
 
   .range-selector-top-bar {
-    display: flex;
-    margin-bottom: 24px;
-    .range-selector-top-bar-item {
-      &:first-child {
+      display: flex;
+      flex-direction: row;
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,0.05);
+      padding-bottom: 1em;
+
+      .range-selector-top-bar-left {
         flex-grow: 1;
+        .range-title {
+          color: rgba(0, 0, 0, 0.85);
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          margin-bottom: .8em;
+          > h2 {
+            line-height: 0;
+            font-size: 1.6em;
+            font-weight: 600;
+            font-family: 'Open Sans', 'sans-serif';
+          }
+          > svg {
+            cursor: pointer;
+            color: rgba(0, 0, 0, 0.45);
+            width: 1em;
+            height: 1em;
+            margin-left: 6px;
+          }
+        }
+        .range-pos-game {
+          font-size: .9em;
+          color: rgba(0, 0, 0, 0.45);
+          > * {
+              margin-right: 1em;
+          }
+        }
       }
-      &:not(:first-child) {
-        margin-left: 8px;
+      .range-selector-top-bar-right {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: flex-end;
+        > * {
+            margin-left: 1em;
+        }
       }
-    }
   }
 
   .range-selector-matrix {
@@ -207,6 +245,26 @@ function RangeSelector(props: Props): React.ReactElement {
 
   return (
     <RangeSelectorStyle className={className}>
+      <div className="range-selector-top-bar">
+          <div className="range-selector-top-bar-left">
+              <div className="range-title">
+                  <h2>Raise first in</h2>
+                  <FiEdit2/>
+              </div>
+              <div className="range-pos-game">
+                  <span>6-MAX CASH</span>
+                  <span>UTG+1</span>
+              </div>
+          </div>
+          <div className="range-selector-top-bar-right">
+              <Button onClick={() => {}} icon={<FiTrash2/>}>
+                  Delete
+              </Button>
+              <Button onClick={() => {}} icon={<FiSave/>}>
+                  Save
+              </Button>
+          </div>
+      </div>
       <Matrix
         elements={COMBO_NAMES}
         states={comboStates}
