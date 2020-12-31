@@ -4,7 +4,7 @@ Holdem Solver is an free to use, open source web-application similar to FlopZill
 
 ## Features
 
-![UI so far](/screenshots/1.png?raw=true "UI So Far")
+[UI so far](/screenshots/2.png?raw=true "UISo Far")
 
 - Fast, range vs range equity calculation
 - Range equity heat maps
