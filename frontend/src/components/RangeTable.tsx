@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { colors, shadow } from '../styles';
+import { colors, shadow, makeOpaque } from '../styles';
 import { FiX, FiPlusCircle } from 'react-icons/fi';
 
 import Modal from './Modal';
@@ -8,6 +8,13 @@ import Button from './Button';
 import CreateRangeForm from './CreateRangeForm';
 
 const RangeTableStyle = styled.div<{ className: string }>`
+  .range-table-header {
+      background: rgba(0, 0, 0, 0.05);
+      padding: 0.5em 1em;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.45);
+  }
   .range-table-controls {
     display: flex;
     justify-content: flex-end;
@@ -38,7 +45,20 @@ const RangeTableStyle = styled.div<{ className: string }>`
     .range-table-item {
       border-bottom: 1px solid #eee;
       &:hover {
-        background: rgba(0, 0, 0, 0.05);
+        background: ${makeOpaque(colors.primary, 0.05)};
+      }
+    }
+    .range-table-item-active {
+      position: relative;
+      background: ${makeOpaque(colors.primary, 0.05)};
+      &:after {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          height: 100%;
+          width: 3px;
+          background: ${colors.primary};
       }
     }
   }
@@ -83,13 +103,16 @@ function RangeTable(props: RangeTableProps): React.ReactElement {
             closeModal={() => setModalShown(false)}
             actionButtons={[
                 <Button variant="primary" onClick={() => {}}>
-                    CREATE RANGE
+                    Create Range
                 </Button>,
             ]}
         >
             <CreateRangeForm/>
         </Modal>
       <div className="range-table-container">
+        <div className="range-table-header">
+            RANGES
+        </div>
         <table className="range-table">
           <thead>
             <tr>
@@ -107,7 +130,7 @@ function RangeTable(props: RangeTableProps): React.ReactElement {
                 <FiX/>
               </td>
             </tr>
-            <tr className="range-table-item">
+            <tr className="range-table-item range-table-item-active">
               <td>UTG+1</td>
               <td>Raise first in</td>
               <td>56.64%</td>

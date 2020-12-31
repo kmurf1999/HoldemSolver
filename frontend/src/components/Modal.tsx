@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 import Button from './Button';
 
+import { FiX } from 'react-icons/fi';
+
 type ModalProps = {
     shown: boolean;
     closeModal: () => void;
@@ -13,8 +15,6 @@ type ModalProps = {
 
 const ModalStyle = styled.div`
     position: fixed;
-    z-index: 999;
-    background: rgba(0, 0, 0, 0.65);
     width: 100%;
     height: 100%;
     left: 0;
@@ -22,6 +22,16 @@ const ModalStyle = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 999;
+    .modal-bg {
+        background: rgba(0, 0, 0, 0.65);
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
     .modal {
         background: #fff;
         border-radius: 2px;
@@ -77,6 +87,7 @@ function Modal(props: ModalProps): React.ReactElement {
     }
     return (
         <ModalStyle>
+            <div onClick={closeModal} className="modal-bg"/>
             <div className="modal">
                 <div className="modal-top">
                     <div className="modal-title">
@@ -87,7 +98,7 @@ function Modal(props: ModalProps): React.ReactElement {
                     {children}
                 </div>
                 <div className="modal-bottom">
-                    <Button onClick={closeModal}>CLOSE</Button>
+                    <Button onClick={closeModal}>Close</Button>
                     {actionButtons}
                 </div>
             </div>

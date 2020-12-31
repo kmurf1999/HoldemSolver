@@ -25,6 +25,7 @@ const ButtonStyle = styled.button<{ size: string; block: boolean, variant: strin
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   box-shadow: ${shadow[0]};
   transition: transform .1s ease;
   width: ${props => props.block ? '100%': 'fit-content'};

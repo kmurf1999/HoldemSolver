@@ -1,8 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
+import { connect, ConnectedProps } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
+import { RootState } from '../redux';
 
 import { colors, shadow } from '../styles';
+
+import { logout } from '../redux/auth/actions';
 
 const NavStyle = styled.nav`
     height: 70px;
@@ -51,12 +55,29 @@ const NavStyle = styled.nav`
     }
 `;
 
-function Nav(): React.ReactElement {
+function mapStateToProps(state: RootState) {
+    return {
+        isLoggedIn: state.auth.isLoggedIn
+    };
+}
+
+function mapDispatchToProps() {
+    return {
+        logout
+    };
+}
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type NavProps = PropsFromRedux;
+
+function Nav(props: NavProps): React.ReactElement {
+    const { isLoggedIn, logout } = props;
     let history = useHistory();
-    const isAuthenticated = localStorage.getItem('jwt') && localStorage.getItem('csrf');
-    function logout() {
-        localStorage.removeItem('jwt');
-        localStorage.removeItem('csrf');
+    function onLogout() {
+        logout();
         history.push('/');
     }
     return (
@@ -65,8 +86,8 @@ function Nav(): React.ReactElement {
                 <Link to="/" className="nav-title">Holdem Tools</Link>
             </div>
             <div className="nav-right">
-                { isAuthenticated ? (
-                    <button onClick={logout} className="nav-link">Logout</button>
+                { isLoggedIn ? (
+                    <button onClick={onLogout} className="nav-link">Logout</button>
                 ) : (
                     <>
                         <Link className="nav-link" to="/login">Sign In</Link>
@@ -78,4 +99,4 @@ function Nav(): React.ReactElement {
     );
 }
 
-export default Nav;
+export default connector(Nav);

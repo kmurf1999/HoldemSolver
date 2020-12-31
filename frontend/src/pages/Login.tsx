@@ -48,6 +48,12 @@ const LoginStyle = styled.div`
             margin-bottom: 1.5em;
         }
     }
+    @media only screen and (max-width: 500px) {
+        .login-container {
+            width: 100%;
+            border-radius: 0;
+        }
+    }
 `;
 
 
